@@ -1,6 +1,6 @@
 # Job Applications
 
-Created by Aamir and _____
+Created by Aamir and William
 
 - [Next.js](https://nextjs.org)
 - [NextAuth.js](https://next-auth.js.org)
