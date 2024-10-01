@@ -5,7 +5,7 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
         <div>A website built by Aamir and William</div>
-        <div>Website will be availble to the public after the compeitition</div>
+        <div>Website will be available to the public after the competition</div>
       </div>
     </main>
   );
