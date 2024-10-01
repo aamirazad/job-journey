@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -14,11 +15,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+    <SessionProvider session={session}>
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         {children}
         <Analytics />
       </body>
     </html>
+    </SessionProvider>
   );
 }
