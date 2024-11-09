@@ -26,7 +26,7 @@ export const users = pgTable("user", {
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
-  dateCreated: timestamp("date_created", {
+  emailVerified: timestamp("email_verified", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
