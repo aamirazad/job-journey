@@ -24,7 +24,7 @@
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.1.0",
-    "@t3-oss/env-nextjs": "^0.10.1",
+    "@t3-oss/env-nextjs": "^0.11.0",
     "@vercel/postgres": "^0.10.0",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
