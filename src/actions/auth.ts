@@ -40,12 +40,12 @@ export async function login(values: z.infer<typeof LoginSchema>) {
   const { email, password } = validatedFields.data;
 
   try {
-    const result = await signIn("credentials", {
+    await signIn("credentials", {
       email,
       password,
       redirectTo: DEFUALT_LOGIN_REDIRECT,
     });
-    return result;
+    return { sucess: "Sucess" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

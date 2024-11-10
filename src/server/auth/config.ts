@@ -8,7 +8,7 @@ import { LoginSchema } from "@/app/schemas";
 import { compare } from "bcryptjs";
 import { getUserByEmail } from "@/actions/data";
 import { getUserById } from "@/actions/data";
-import type { UserRoles } from "@/server/auth/config"
+import type { UserRole } from "@/server/db/schema"
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,7 +21,7 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
-      role: UserRoles;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 
@@ -62,7 +62,7 @@ export const authConfig = {
       }
 
       if (token.role && session.user) {
-        session.user.role = token.role;
+        session.user.role = token.role as UserRole;
       }
 
       return session;
