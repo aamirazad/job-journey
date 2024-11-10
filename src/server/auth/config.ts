@@ -1,8 +1,8 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 
 import { db } from "@/server/db";
-import { accounts, sessions, users } from "@/server/db/schema";
+import { accounts, users } from "@/server/db/schema";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/app/schemas";
 import { compare } from "bcryptjs";
