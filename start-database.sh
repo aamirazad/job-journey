@@ -16,6 +16,11 @@ if ! [ -x "$(command -v docker)" ]; then
   exit 1
 fi
 
+if ! docker info > /dev/null 2>&1; then
+  echo "Docker daemon is not running. Please start Docker and try again."
+  exit 1
+fi
+
 if [ "$(docker ps -q -f name=$DB_CONTAINER_NAME)" ]; then
   echo "Database container '$DB_CONTAINER_NAME' already running"
   exit 0
@@ -31,8 +36,8 @@ fi
 set -a
 source .env
 
-DB_PASSWORD=$(echo "$DATABASE_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
-DB_PORT=$(echo "$DATABASE_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')
+DB_PASSWORD=$(echo "$POSTGRES_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
+DB_PORT=$(echo "$POSTGRES_URL" | awk -F':' '{print $4}' | awk -F'\/' '{print $1}')
 
 if [ "$DB_PASSWORD" = "password" ]; then
   echo "You are using the default database password"
