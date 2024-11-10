@@ -7,8 +7,11 @@ import {
   text,
   timestamp,
   varchar,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+
+export const UserRoles = pgEnum("user_role", ["ADMIN", "USER", "COMPANY"]);
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -26,6 +29,7 @@ export const users = createTable("user", {
   name: varchar("name", { length: 255 }),
   email: varchar("email", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
+  role: UserRoles("role").default("USER").notNull(),
   emailVerified: timestamp("email_verified", {
     mode: "date",
     withTimezone: true,
