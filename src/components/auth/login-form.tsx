@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/app/schemas";
-import { login } from "@/actions";
+import { login } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { FormSucess } from "@/components/auth/form-sucess";
@@ -38,8 +38,11 @@ export default function LoginForm() {
 
     startTransition(async () => {
       await login(values).then((data) => {
-        setError(data.error);
-        setSucess(data.sucess);
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setSucess("Login successful");
+        }
       });
     });
   };
