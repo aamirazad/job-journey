@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignUpSchema } from "@/app/schemas";
-import { signup } from "@/actions";
+import { signup } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { FormSucess } from "@/components/auth/form-sucess";
@@ -50,18 +50,14 @@ export default function SignUpForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4 space-y-4">
-          <FormField
+            <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="John"
-                      disabled={isPending}
-                    />
+                    <Input {...field} placeholder="John" disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
