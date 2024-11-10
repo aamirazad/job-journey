@@ -5,6 +5,10 @@ import type { z } from "zod";
 import { hash } from "bcryptjs";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
+import { signIn } from "@/server/auth/index";
+import { DEFUALT_LOGIN_REDIRECT } from "@/routes";
+import { AuthError } from "next-auth";
+import { getUserByEmail } from "@/actions/data";
 
 export async function signup(values: z.infer<typeof SignUpSchema>) {
   const validatedFields = SignUpSchema.safeParse(values);
@@ -16,7 +20,7 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
 
   const hashedPassword = await hash(password, 10);
 
-  const existingUser = await getUserByEmail(email)
+  const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
     return { error: "User already exists" };
@@ -35,40 +39,22 @@ export async function login(values: z.infer<typeof LoginSchema>) {
 
   const { email, password } = validatedFields.data;
 
-  const user = await getUserByEmail(email)
-
-  if (!user) {
-    return { error: "User not found" };
-  }
-
-  const hashedPassword = await hash(password, 10);
-
-  if (hashedPassword != user.password) {
-    return { error: "Incorrect password" };
-  }
-
-  console.log(validatedFields);
-  return { sucess: "Sucess" };
-}
-
-export async function getUserByEmail(email: string) {
   try {
-    const user = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.email, email),
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirectTo: DEFUALT_LOGIN_REDIRECT,
     });
-    return user;
-  } catch {
-    return null;
-  }
-}
-
-export async function getUserById(id: string) {
-  try {
-    const user = await db.query.users.findFirst({
-      where: (users, { eq }) => eq(users.id, id),
-    });
-    return user;
-  } catch {
-    return null;
+    return result;
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { error: "Invalid credentials" };
+        default:
+          return { error: "Something went wrong" };
+      }
+    }
+    throw error;
   }
 }

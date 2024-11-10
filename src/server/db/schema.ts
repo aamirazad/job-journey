@@ -16,9 +16,9 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const pgTable = pgTableCreator((name) => `job-applications_${name}`);
+export const createTable = pgTableCreator((name) => `job-applications_${name}`);
 
-export const users = pgTable("user", {
+export const users = createTable("user", {
   id: varchar("id", { length: 255 })
     .notNull()
     .primaryKey()
@@ -37,7 +37,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
 
-export const accounts = pgTable(
+export const accounts = createTable(
   "account",
   {
     userId: varchar("user_id", { length: 255 })
@@ -68,4 +68,27 @@ export const accounts = pgTable(
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
+}));
+
+export const sessions = createTable(
+  "session",
+  {
+    sessionToken: varchar("session_token", { length: 255 })
+      .notNull()
+      .primaryKey(),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    expires: timestamp("expires", {
+      mode: "date",
+      withTimezone: true,
+    }).notNull(),
+  },
+  (session) => ({
+    userIdIdx: index("session_user_id_idx").on(session.userId),
+  }),
+);
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
