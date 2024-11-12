@@ -18,11 +18,11 @@ import { LoginSchema } from "@/schemas";
 import { login } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
-import { FormSucess } from "@/components/auth/form-sucess";
+import { FormSuccess } from "@/components/auth/form-success";
 
 export default function LoginForm() {
   const [error, setError] = useState<string | undefined>("");
-  const [sucess, setSucess] = useState<string | undefined>("");
+  const [success, setsuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -34,14 +34,14 @@ export default function LoginForm() {
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
-    setSucess("");
+    setsuccess("");
 
     startTransition(async () => {
       await login(values).then((data) => {
         if (data.error) {
           setError(data.error);
         } else {
-          setSucess("Login successful");
+          setsuccess("Login successful");
         }
       });
     });
@@ -90,7 +90,7 @@ export default function LoginForm() {
             />
           </div>
           <FormError message={error} />
-          <FormSucess message={sucess} />
+          <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Login
           </Button>

@@ -18,11 +18,11 @@ import { SignUpSchema } from "@/schemas";
 import { signup } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
-import { FormSucess } from "@/components/auth/form-sucess";
+import { FormSuccess } from "@/components/auth/form-success";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string | undefined>("");
-  const [sucess, setSucess] = useState<string | undefined>("");
+  const [success, setsuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -35,12 +35,12 @@ export default function SignUpForm() {
 
   const onSubmit = (values: z.infer<typeof SignUpSchema>) => {
     setError("");
-    setSucess("");
+    setsuccess("");
 
     startTransition(async () => {
       await signup(values).then((data) => {
         setError(data.error);
-        setSucess(data.sucess);
+        setsuccess(data.success);
       });
     });
   };
@@ -101,7 +101,7 @@ export default function SignUpForm() {
             />
           </div>
           <FormError message={error} />
-          <FormSucess message={sucess} />
+          <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Sign up
           </Button>

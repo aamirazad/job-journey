@@ -28,7 +28,7 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
 
   await db.insert(users).values({ name, email, password: hashedPassword });
 
-  return { sucess: "Account created" };
+  return { success: "Account created" };
 }
 
 export async function login(values: z.infer<typeof LoginSchema>) {
@@ -45,7 +45,7 @@ export async function login(values: z.infer<typeof LoginSchema>) {
       password,
       redirectTo: DEFUALT_LOGIN_REDIRECT,
     });
-    return { sucess: "Sucess" };
+    return { success: "success" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
