@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignUpSchema } from "@/app/schemas";
+import { SignUpSchema } from "@/schemas";
 import { signup } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";

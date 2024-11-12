@@ -1,6 +1,6 @@
 "use server";
 
-import { LoginSchema, SignUpSchema } from "@/app/schemas";
+import { LoginSchema, SignUpSchema } from "@/schemas";
 import type { z } from "zod";
 import { hash } from "bcryptjs";
 import { db } from "@/server/db";
