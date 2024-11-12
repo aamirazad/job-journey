@@ -18,7 +18,7 @@ import { LoginSchema } from "@/schemas";
 import { login } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
-import { Formsuccess } from "@/components/auth/form-success";
+import { FormSuccess } from "@/components/auth/form-success";
 
 export default function LoginForm() {
   const [error, setError] = useState<string | undefined>("");
@@ -90,7 +90,7 @@ export default function LoginForm() {
             />
           </div>
           <FormError message={error} />
-          <Formsuccess message={success} />
+          <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Login
           </Button>
