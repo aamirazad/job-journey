@@ -1,10 +1,10 @@
 import { SquareCheck } from "lucide-react";
 
-interface FormSucessProps {
+interface FormsuccessProps {
   message?: string;
 }
 
-export function FormSucess({ message }: FormSucessProps) {
+export function Formsuccess({ message }: FormsuccessProps) {
   if (!message) {
     return null;
   }
