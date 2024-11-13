@@ -46,7 +46,7 @@ export default function SignUpForm() {
   };
 
   return (
-    <FormWrapper intent="Sign up">
+    <FormWrapper header="Sign up" description="Create an account to get started" backButtonLabel="Already have an account?" backButtonHref="/auth/login" click="Login">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4 space-y-4">
