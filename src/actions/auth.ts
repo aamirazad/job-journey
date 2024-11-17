@@ -26,10 +26,6 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "User already exists" };
   }
 
-  if (!USER_ROLES.includes(role)) {
-    return { error: "Invalid role" };
-  }
-
   await db
     .insert(users)
     .values({ name, email, role, password: hashedPassword });
