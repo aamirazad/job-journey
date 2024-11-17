@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { auth } from "@/server/auth";
 import { Search } from "lucide-react";
-import Link from "next/link";
 
 export default async function HomePage() {
-  const session = await auth();
 
   return (
     <div className="flex flex-col items-center justify-center">
