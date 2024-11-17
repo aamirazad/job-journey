@@ -10,23 +10,11 @@ export default function Header() {
         <span className="sr-only">Student Job Portal</span>
       </Link>
       <nav className="ml-auto flex gap-4">
-        <Link
-          className={buttonVariants({ variant: "link" })}
-          href="/auth/login"
-        >
-          Login
+        <Link className={buttonVariants({ variant: "link" })} href="/search">
+          Find jobs
         </Link>
-        <Link
-          className={buttonVariants({ variant: "link" })}
-          href="/auth/login"
-        >
-          Login
-        </Link>
-        <Link
-          className={buttonVariants({ variant: "link" })}
-          href="/auth/login"
-        >
-          Login
+        <Link className={buttonVariants({ variant: "link" })} href="/post">
+          Post a Job
         </Link>
         <Link
           className={buttonVariants({ variant: "outline" })}
