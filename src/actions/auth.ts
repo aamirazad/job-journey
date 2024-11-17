@@ -30,7 +30,9 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "Invalid role" };
   }
 
-  await db.insert(users).values({ name, email, role, password: hashedPassword });
+  await db
+    .insert(users)
+    .values({ name, email, role, password: hashedPassword });
 
   return { success: "Account created" };
 }
@@ -44,12 +46,16 @@ export async function login(values: z.infer<typeof LoginSchema>) {
   const { email, password } = validatedFields.data;
 
   try {
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email,
       password,
       redirectTo: DEFUALT_LOGIN_REDIRECT,
     });
-    return { success: "success" };
+    if (res) {
+      return { success: "success" };
+    } else {
+      return { error: "Invalid credentials" };
+    }
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
