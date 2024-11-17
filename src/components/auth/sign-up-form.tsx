@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { USER_ROLES_WITHOUT_ADMIN } from "@/server/db/schema";
+import { redirect } from "next/navigation";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string | undefined>("");
@@ -49,7 +50,12 @@ export default function SignUpForm() {
     startTransition(async () => {
       await signup(values).then((data) => {
         setError(data.error);
-        setsuccess(data.success);
+        if (data.success) {
+          setsuccess(data.success);
+          setTimeout(() => {
+            redirect("auth/login");
+          }, 1000);
+        }
       });
     });
   };
@@ -96,7 +102,8 @@ export default function SignUpForm() {
                     <SelectContent>
                       {USER_ROLES_WITHOUT_ADMIN.map((role) => (
                         <SelectItem key={role} value={role}>
-                          {role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()}
+                          {role.charAt(0).toUpperCase() +
+                            role.slice(1).toLowerCase()}
                         </SelectItem>
                       ))}
                     </SelectContent>
