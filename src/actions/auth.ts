@@ -4,7 +4,7 @@ import { LoginSchema, SignUpSchema } from "@/schemas";
 import type { z } from "zod";
 import { hash } from "bcryptjs";
 import { db } from "@/server/db";
-import { users, USER_ROLES } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 import { signIn } from "@/server/auth/index";
 import { DEFUALT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
