@@ -4,7 +4,7 @@ import { LoginSchema, SignUpSchema } from "@/schemas";
 import type { z } from "zod";
 import { hash } from "bcryptjs";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { users, USER_ROLES } from "@/server/db/schema";
 import { signIn } from "@/server/auth/index";
 import { DEFUALT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
@@ -16,7 +16,7 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "Invalid fields" };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const { name, role, email, password } = validatedFields.data;
 
   const hashedPassword = await hash(password, 10);
 
@@ -26,7 +26,11 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "User already exists" };
   }
 
-  await db.insert(users).values({ name, email, password: hashedPassword });
+  if (!USER_ROLES.includes(role)) {
+    return { error: "Invalid role" };
+  }
+
+  await db.insert(users).values({ name, email, role, password: hashedPassword });
 
   return { success: "Account created" };
 }
