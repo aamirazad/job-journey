@@ -4,7 +4,7 @@ import { GraduationCap, Home } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="m-64 flex flex-col items-center justify-center">
+    <div className="m-32 flex flex-col items-center justify-center">
       <div className="container flex flex-col items-center px-4 text-center md:px-6">
         <GraduationCap className="mb-4 h-16 w-16 text-primary" />
         <h1 className="mb-8 text-4xl font-bold tracking-tighter sm:text-4xl md:text-6xl lg:text-5xl/none">
