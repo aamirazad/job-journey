@@ -16,7 +16,7 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "Invalid fields" };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const { name, role, email, password } = validatedFields.data;
 
   const hashedPassword = await hash(password, 10);
 
@@ -26,7 +26,9 @@ export async function signup(values: z.infer<typeof SignUpSchema>) {
     return { error: "User already exists" };
   }
 
-  await db.insert(users).values({ name, email, password: hashedPassword });
+  await db
+    .insert(users)
+    .values({ name, email, role, password: hashedPassword });
 
   return { success: "Account created" };
 }
@@ -40,12 +42,16 @@ export async function login(values: z.infer<typeof LoginSchema>) {
   const { email, password } = validatedFields.data;
 
   try {
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email,
       password,
       redirectTo: DEFUALT_LOGIN_REDIRECT,
     });
-    return { success: "success" };
+    if (res) {
+      return { success: "success" };
+    } else {
+      return { error: "Invalid credentials" };
+    }
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

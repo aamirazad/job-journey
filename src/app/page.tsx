@@ -1,16 +1,38 @@
-import { auth } from "@/server/auth";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 export default async function HomePage() {
-  const session = await auth();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        {session ? <p>Hello {session.user?.role} {session.user?.name}</p> : null}
-        <Link href="/auth/login">Login</Link>
-        <Link href="/auth/signup">Create an account</Link>
-      </div>
-    </main>
+    <div className="flex flex-col items-center justify-center">
+      <section className="flex w-full items-center justify-center py-12 md:py-24 lg:py-32 xl:py-48">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                Find Your Dream Job
+              </h1>
+              <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
+                Connect with employers and find career opportunities tailored for you
+              </p>
+            </div>
+            <div className="w-full max-w-sm space-y-2">
+              <form className="flex w-full max-w-md flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
+                <Input
+                  className="flex-1"
+                  placeholder="Search jobs..."
+                  type="search"
+                />
+                <Button type="submit" className="w-full sm:w-auto">
+                  <Search className="mr-2 h-4 w-4" />
+                  Search
+                </Button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

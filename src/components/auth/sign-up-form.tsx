@@ -19,6 +19,15 @@ import { signup } from "@/actions/auth";
 import { useState, useTransition } from "react";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { USER_ROLES_WITHOUT_ADMIN } from "@/server/db/schema";
+import { redirect } from "next/navigation";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string | undefined>("");
@@ -28,6 +37,7 @@ export default function SignUpForm() {
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
       name: "",
+      role: "STUDENT",
       email: "",
       password: "",
     },
@@ -40,13 +50,24 @@ export default function SignUpForm() {
     startTransition(async () => {
       await signup(values).then((data) => {
         setError(data.error);
-        setsuccess(data.success);
+        if (data.success) {
+          setsuccess(data.success);
+          setTimeout(() => {
+            redirect("auth/login");
+          }, 1000);
+        }
       });
     });
   };
 
   return (
-    <FormWrapper header="Sign up" description="Create an account to get started" backButtonLabel="Already have an account?" backButtonHref="/auth/login" click="Login">
+    <FormWrapper
+      header="Sign up"
+      description="Create an account to get started"
+      backButtonLabel="Already have an account?"
+      backButtonHref="/auth/login"
+      click="Login"
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid gap-4 space-y-4">
@@ -59,6 +80,34 @@ export default function SignUpForm() {
                   <FormControl>
                     <Input {...field} placeholder="John" disabled={isPending} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {USER_ROLES_WITHOUT_ADMIN.map((role) => (
+                        <SelectItem key={role} value={role}>
+                          {role.charAt(0).toUpperCase() +
+                            role.slice(1).toLowerCase()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
