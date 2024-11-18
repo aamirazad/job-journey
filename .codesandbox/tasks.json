@@ -1,0 +1,83 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "command": "yarn install",
+      "name": "Install Dependencies"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "build": {
+      "name": "build",
+      "command": "yarn build",
+      "runAtStart": false
+    },
+    "check": {
+      "name": "check",
+      "command": "yarn check",
+      "runAtStart": false
+    },
+    "db:generate": {
+      "name": "db:generate",
+      "command": "yarn db:generate",
+      "runAtStart": false
+    },
+    "db:migrate": {
+      "name": "db:migrate",
+      "command": "yarn db:migrate",
+      "runAtStart": false
+    },
+    "db:push": {
+      "name": "db:push",
+      "command": "yarn db:push",
+      "runAtStart": false
+    },
+    "db:studio": {
+      "name": "db:studio",
+      "command": "yarn db:studio",
+      "runAtStart": false
+    },
+    "dev": {
+      "name": "dev",
+      "command": "yarn dev",
+      "runAtStart": true
+    },
+    "lint": {
+      "name": "lint",
+      "command": "yarn lint",
+      "runAtStart": false
+    },
+    "lint:fix": {
+      "name": "lint:fix",
+      "command": "yarn lint:fix",
+      "runAtStart": false
+    },
+    "preview": {
+      "name": "preview",
+      "command": "yarn preview",
+      "runAtStart": false
+    },
+    "start": {
+      "name": "start",
+      "command": "yarn start",
+      "runAtStart": false
+    },
+    "typecheck": {
+      "name": "typecheck",
+      "command": "yarn typecheck",
+      "runAtStart": false
+    },
+    "format:write": {
+      "name": "format:write",
+      "command": "yarn format:write",
+      "runAtStart": false
+    },
+    "format:check": {
+      "name": "format:check",
+      "command": "yarn format:check",
+      "runAtStart": false
+    }
+  }
+}
