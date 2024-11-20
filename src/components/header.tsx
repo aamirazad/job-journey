@@ -23,7 +23,7 @@ import {
 import { User } from "lucide-react";
 import Image from "next/image";
 
-async function UserSettings() {
+async function UserDialog() {
   const session = await auth();
   if (!session) return null;
 
@@ -99,7 +99,7 @@ export default async function Header() {
           Post a Job
         </Link>
         {session ? (
-          <UserSettings />
+          <UserDialog />
         ) : (
           <>
             <Link
