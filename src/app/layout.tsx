@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.variable}>
       <body className="flex min-h-screen flex-col">
         <Header />
-        <main className="flex flex-1 flex-col">{children}</main>
+        <main className="flex flex-1 flex-col mt-16">{children}</main>
         <Footer />
       </body>
     </html>
