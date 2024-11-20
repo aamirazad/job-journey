@@ -1,25 +1,34 @@
+import FormWrapper from "@/components/auth/form-wrapper";
 import { Button } from "@/components/ui/button";
-import { auth, signOut } from "@/server/auth";
-import { redirect } from "next/navigation";
 
-export default async function UserSettings() {
-  const session = await auth();
-
-  if (!session) {
-    return redirect("/auth/login");
-  }
-
+export default function UserSettings() {
   return (
-    <div>
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-          await signOut();
-        }}
-      >
-        <Button>Sign out</Button>
+    <FormWrapper>
+      <form>
+        <div>
+          <label>
+            Name:
+            <input type="text" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Email:
+            <input type="email" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Role:
+            <select>
+              <option value="STUDENT">STUDENT</option>
+              <option value="TEACHER">TEACHER</option>
+              {/* Add more roles as needed */}
+            </select>
+          </label>
+        </div>
+        <Button type="submit">Update</Button>
       </form>
-    </div>
+    </FormWrapper>
   );
 }
