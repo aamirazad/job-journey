@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { auth, signOut } from "@/server/auth";
 import { redirect } from "next/navigation";
 
-export default async function UserAvatar() {
+export default async function UserSettings() {
   const session = await auth();
 
   if (!session) {
