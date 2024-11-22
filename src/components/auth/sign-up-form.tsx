@@ -53,7 +53,7 @@ export default function SignUpForm() {
         if (data.success) {
           setsuccess(data.success);
           setTimeout(() => {
-            redirect("auth/login");
+            redirect("/auth/login");
           }, 1000);
         }
       });
