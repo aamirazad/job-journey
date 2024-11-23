@@ -1,7 +1,10 @@
 "use server";
 
+import type { jobPostSchema } from "@/schemas";
 import { db } from "@/server/db";
-import { unstable_cache } from "next/cache";
+import { posts } from "@/server/db/schema";
+import type { Session } from "next-auth";
+import type * as z from "zod";
 
 export async function getUserByEmail(email: string) {
   try {
@@ -25,11 +28,50 @@ export async function getUserById(id: string) {
   }
 }
 
-export const getJobPosts = unstable_cache(async () => {
+export async function getJobPosts() {
   try {
     const posts = await db.query.posts.findMany();
     return posts;
   } catch {
     return null;
   }
-});
+}
+
+export async function createJobPost(
+  values: z.infer<typeof jobPostSchema>,
+  session: Session,
+) {
+  if (!session || !["EMPLOYER", "ADMIN"].includes(session.user.role)) {
+    return { error: "Not authorized" };
+  }
+
+  try {
+    const [result] = await db
+      .insert(posts)
+      .values({
+        ownerId: session.user.id,
+        title: values.title,
+        company: values.company,
+        location: values.location,
+        employmentType: values.employmentType,
+        workplaceType: values.workplaceType,
+        experienceLevel: values.experienceLevel,
+        salaryMin: values.salaryMin,
+        salaryMax: values.salaryMax,
+        description: values.description,
+        requirements: values.requirements ?? null,
+        responsibilities: values.responsibilities ?? null,
+        benefits: values.benefits ?? null,
+      })
+      .returning({ postId: posts.postId });
+
+    if (!result) {
+      return { error: "Failed to create job post" };
+    }
+
+    return { success: true, id: result.postId };
+  } catch (error) {
+    console.error("Failed to create job post:", error);
+    return { error: "Failed to create job post" };
+  }
+}
