@@ -30,8 +30,10 @@ export async function getUserById(id: string) {
 
 export async function getJobPosts() {
   try {
-    const posts = await db.query.posts.findMany();
-    return posts;
+    const result = await db.query.posts.findMany({
+      orderBy: (posts, { asc }) => [asc(posts.dateCreated)],
+    });
+    return result;
   } catch {
     return null;
   }

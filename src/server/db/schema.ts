@@ -89,7 +89,7 @@ export const posts = createTable("posts", {
     .$defaultFn(() => crypto.randomUUID()),
 
   // Metrics
-  DateCreated: timestamp("dateCreated", {
+  dateCreated: timestamp("dateCreated", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
