@@ -258,7 +258,6 @@ export default function PostJobPage() {
                 <FormControl>
                   <Textarea
                     placeholder="Describe the role, responsibilities, and ideal candidate..."
-                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -275,7 +274,6 @@ export default function PostJobPage() {
                 <FormControl>
                   <Textarea
                     placeholder="List any specific requirements or qualifications..."
-                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -292,7 +290,6 @@ export default function PostJobPage() {
                 <FormControl>
                   <Textarea
                     placeholder="List the main responsibilities of the role..."
-                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -309,7 +306,6 @@ export default function PostJobPage() {
                 <FormControl>
                   <Textarea
                     placeholder="List any benefits or perks offered with this position..."
-                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
