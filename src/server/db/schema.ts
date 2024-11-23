@@ -15,6 +15,7 @@ import { type AdapterAccount } from "next-auth/adapters";
 export const USER_ROLES = ["ADMIN", "STUDENT", "EMPLOYER"] as const;
 export const USER_ROLES_WITHOUT_ADMIN = ["STUDENT", "EMPLOYER"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
+import { createInsertSchema } from 'drizzle-zod';
 
 // Create the PostgreSQL enum type
 export const userRoleEnum = pgEnum("user_role", USER_ROLES);
@@ -118,3 +119,5 @@ export const posts = createTable("posts", {
   responsibilities: text("responsibilities"),
   benefits: text("benefits"),
 });
+
+export const insertPostSchema = createInsertSchema(users);

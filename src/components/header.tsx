@@ -92,7 +92,7 @@ export default async function Header() {
         <span className="sr-only">Student Job Portal</span>
       </Link>
       <nav className="ml-auto flex items-center gap-4">
-        <Link className={buttonVariants({ variant: "link" })} href="/search">
+        <Link className={buttonVariants({ variant: "link" })} href="/jobs">
           Find jobs
         </Link>
         <Link className={buttonVariants({ variant: "link" })} href="/post">
