@@ -17,9 +17,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={GeistSans.variable}>
-      <body className="flex min-h-screen flex-col">
+      <body className="relative flex min-h-screen flex-col">
         <Header />
-        <main className="flex flex-1 flex-col mt-16">{children}</main>
+        <div className="absolute left-0 top-0 -z-10 flex h-full w-full flex-col">
+          <div className="w-full flex-1 bg-gradient-to-b from-[#FF499E]/10 to-[#D264B6]/10" />
+          <div className="w-full flex-1 bg-gradient-to-b from-[#D264B6]/10 to-[#A480CF]/10" />
+          <div className="w-full flex-1 bg-gradient-to-b from-[#A480CF]/10 to-[#779BE7]/30" />
+          <div className="w-full flex-1 bg-gradient-to-b from-[#779BE7]/30 to-[#49B6FF]/30" />
+        </div>
+        <main className="mt-16 flex-1 md:mt-8">{children}</main>
         <Toaster />
         <Footer />
       </body>
