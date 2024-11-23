@@ -26,20 +26,35 @@ export const LoginSchema = z.object({
 });
 
 export const jobPostSchema = z.object({
-  title: z.string().min(2, {
-    message: "Job title must be at least 2 characters.",
-  }),
-  company: z.string().min(2, {
-    message: "Company name must be at least 2 characters.",
-  }),
-  location: z.string().min(2, {
-    message: "Location must be at least 2 characters.",
-  }),
+  title: z
+    .string()
+    .min(2, {
+      message: "Job title must be at least 2 characters.",
+    })
+    .max(255, { message: "Job title must be less than 255 characters" }),
+  company: z
+    .string()
+    .min(2, {
+      message: "Company name must be at least 2 characters.",
+    })
+    .max(255, { message: "Company name must be less than 255 characters" }),
+  location: z
+    .string()
+    .min(2, {
+      message: "Location must be at least 2 characters.",
+    })
+    .max(255, { message: "Location must be less than 255 characters" }),
   employmentType: z.enum(["Full-time", "Part-time", "Contract", "Internship"]),
   workplaceType: z.enum(["Remote", "Hybrid", "On-site"]),
   experienceLevel: z.enum(["Entry", "Mid", "Senior"]),
-  salaryMin: z.number().min(0),
-  salaryMax: z.number().min(0),
+  salaryMin: z
+    .number()
+    .min(0)
+    .max(2147483647, { message: "Minimum salary must be below 2,000,000,000" }),
+  salaryMax: z
+    .number()
+    .min(0)
+    .max(2147483647, { message: "Maximum salary must be below 2,000,000,000" }),
   description: z.string().min(10, {
     message: "Job description must be at least 10 characters.",
   }),
