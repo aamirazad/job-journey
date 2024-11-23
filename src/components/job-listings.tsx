@@ -40,7 +40,7 @@ function Listings() {
   return (
     <>
       {posts.data?.map((job) => (
-        <Card key={job.postId} className="flex flex-col">
+        <Card key={job.postId} className="flex flex-col bg-white/50">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
             <p className="text-lg font-semibold text-muted-foreground">

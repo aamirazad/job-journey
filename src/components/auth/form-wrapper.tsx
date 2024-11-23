@@ -20,7 +20,7 @@ interface FormWrapperProps {
 
 export default function FormWrapper({ children, header, description, backButtonLabel, backButtonHref, click }: FormWrapperProps) {
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-sm bg-white/50">
       <CardHeader>
         <CardTitle className="text-2xl">{header}</CardTitle>
         <CardDescription>
