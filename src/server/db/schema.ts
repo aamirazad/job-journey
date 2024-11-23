@@ -9,13 +9,14 @@ import {
   varchar,
   pgEnum,
   boolean,
+  serial,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
 export const USER_ROLES = ["ADMIN", "STUDENT", "EMPLOYER"] as const;
 export const USER_ROLES_WITHOUT_ADMIN = ["STUDENT", "EMPLOYER"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
-import { createInsertSchema } from 'drizzle-zod';
+import { createInsertSchema } from "drizzle-zod";
 
 // Create the PostgreSQL enum type
 export const userRoleEnum = pgEnum("user_role", USER_ROLES);
@@ -83,17 +84,14 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 
 export const posts = createTable("posts", {
   // Internal
-  postId: varchar("postId", { length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  postId: serial("post-id").primaryKey(),
 
   // Metrics
   dateCreated: timestamp("dateCreated", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
-  reviewed: boolean('reviewed').default(false).notNull(),
+  reviewed: boolean("reviewed").default(false).notNull(),
 
   // Relations
   ownerId: varchar("owner_id", { length: 255 })
