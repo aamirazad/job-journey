@@ -23,16 +23,14 @@ import {
 } from "@/components/ui/select";
 import { jobPostSchema } from "@/schemas";
 import type * as z from "zod";
-import { useSession } from "next-auth/react";
 import BodyMessage from "@/components/body-message";
 import { toast } from "sonner";
-import LoadingSpinner from "@/components/loading-spinner";
 import { createJobPost } from "@/actions/data";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import type { Session } from "next-auth";
 
-export default function PostJobPage() {
-  const { data: session } = useSession();
-  const router = useRouter()
+export default function PostJob(session: Session) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof jobPostSchema>>({
     resolver: zodResolver(jobPostSchema),
     defaultValues: {
@@ -50,10 +48,6 @@ export default function PostJobPage() {
       benefits: "",
     },
   });
-
-  if (!session) {
-    return <LoadingSpinner />;
-  }
 
   if (!["EMPLOYER", "ADMIN"].includes(session.user.role)) {
     return (

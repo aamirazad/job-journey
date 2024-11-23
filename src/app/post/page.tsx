@@ -1,7 +1,6 @@
 import PostJob from "@/components/post-job";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
-import { SessionProvider } from "next-auth/react";
 
 export default async function PostPage() {
   const session = await auth();
@@ -10,9 +9,5 @@ export default async function PostPage() {
     return redirect("/auth/login");
   }
 
-  return (
-    <SessionProvider>
-      <PostJob />
-    </SessionProvider>
-  );
+  return <PostJob {...session} />;
 }
