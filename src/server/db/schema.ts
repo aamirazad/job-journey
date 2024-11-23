@@ -8,6 +8,7 @@ import {
   timestamp,
   varchar,
   pgEnum,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -79,25 +80,41 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = createTable(
-  "session",
-  {
-    sessionToken: varchar("session_token", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("user_id", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    expires: timestamp("expires", {
-      mode: "date",
-      withTimezone: true,
-    }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("session_user_id_idx").on(session.userId),
-  }),
-);
+export const posts = createTable("posts", {
+  // Internal
+  postId: varchar("postId", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
 
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
+  // Metrics
+  DateCreated: timestamp("dateCreated", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
+  reviewed: boolean('reviewed').default(false).notNull(),
+
+  // Relations
+  ownerId: varchar("owner_id", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+
+  // Basic job information
+  title: varchar("title", { length: 255 }).notNull(),
+  company: varchar("company", { length: 255 }).notNull(),
+  location: varchar("location", { length: 255 }).notNull(),
+
+  // Job details
+  employmentType: varchar("employment_type", { length: 50 }) // Full-time, Part-time, Contract, etc.
+    .notNull(),
+  workplaceType: varchar("workplace_type", { length: 50 }), // Remote, Hybrid, On-site
+  experienceLevel: varchar("experience_level", { length: 50 }), // Entry, Mid, Senior
+  salaryMin: integer("salary_min"),
+  salaryMax: integer("salary_max"),
+
+  // Job description and requirements
+  description: text("description").notNull(),
+  requirements: text("requirements"),
+  responsibilities: text("responsibilities"),
+  benefits: text("benefits"),
+});

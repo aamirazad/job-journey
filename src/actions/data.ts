@@ -1,4 +1,7 @@
+"use server";
+
 import { db } from "@/server/db";
+import { unstable_cache } from "next/cache";
 
 export async function getUserByEmail(email: string) {
   try {
@@ -21,3 +24,12 @@ export async function getUserById(id: string) {
     return null;
   }
 }
+
+export const getJobPosts = unstable_cache(async () => {
+  try {
+    const posts = await db.query.posts.findMany();
+    return posts;
+  } catch {
+    return null;
+  }
+});
