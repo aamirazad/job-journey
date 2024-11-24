@@ -1,11 +1,11 @@
 "use server";
 
-import type { EmploymentType, jobPostSchema } from "@/schemas";
+import type { jobPostSchema } from "@/schemas";
 import { db } from "@/server/db";
 import { posts } from "@/server/db/schema";
 import type { Session } from "next-auth";
 import type * as z from "zod";
-import { and, desc, ilike, inArray } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 export async function getUserByEmail(email: string) {
   try {

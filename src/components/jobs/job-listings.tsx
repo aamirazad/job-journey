@@ -39,7 +39,6 @@ interface ListingsProps {
   employmentTypes?: EmploymentType[];
 }
 function Listings({ search, employmentTypes }: ListingsProps) {
-
   // Fetch all job posts using react-query and cache them locally
   const {
     data: jobPosts,
