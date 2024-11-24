@@ -31,6 +31,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
+import { set } from "zod";
 
 const queryClient = new QueryClient();
 
@@ -166,6 +167,11 @@ export default function JobListings() {
     }
   };
 
+  const clearAll = () => {
+    void setSearch(null);
+    void setEmploymentTypes([]);
+  };
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="mb-6 text-3xl font-bold">Explore Job Opportunities</h1>
@@ -196,7 +202,7 @@ export default function JobListings() {
                   ))}
                 </div>
               </div>
-              <Button className="w-24" onClick={() => setSearch(null)}>
+              <Button className="w-24" onClick={clearAll}>
                 Clear
               </Button>
             </div>
