@@ -34,40 +34,67 @@ import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(handler); // Cleanup on value or delay change
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
 interface ListingsProps {
   search?: string;
   employmentTypes?: EmploymentType[];
 }
-
 function Listings({ search, employmentTypes }: ListingsProps) {
-  const debouncedSearch = useDebouncedValue(search, 500);
 
-  const posts = useQuery({
-    queryKey: ["posts", debouncedSearch, employmentTypes],
-    queryFn: async () => {
-      const data = await getJobPosts({ search: debouncedSearch, employmentTypes });
-      return data;
-    },
+  // Fetch all job posts using react-query and cache them locally
+  const {
+    data: jobPosts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getJobPosts,
   });
 
-  if (posts.isLoading) {
+  // Local state to store filtered job posts
+  const [posts, setPosts] = useState<typeof jobPosts>([]);
+
+  // Filter job posts whenever search, employmentTypes, or jobPosts change
+  useEffect(() => {
+    const filterJobPosts = () => {
+      if (!jobPosts) return [];
+
+      return jobPosts.filter((job) => {
+        // Filter by search term (case-insensitive match for the title)
+        const matchesSearch = search
+          ? job.title.toLowerCase().includes(search.toLowerCase())
+          : true;
+
+        // Filter by employmentTypes if provided
+        const matchesEmploymentType =
+          employmentTypes && employmentTypes.length > 0
+            ? employmentTypes.includes(job.employmentType as EmploymentType)
+            : true;
+
+        // Return true only if both conditions match
+        return matchesSearch && matchesEmploymentType;
+      });
+    };
+
+    setPosts(filterJobPosts()); // Apply filter after every change
+  }, [search, employmentTypes, jobPosts]); // Re-run the effect when any of these values change
+
+  // Loading state while data is being fetched
+  if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <p>Error fetching job posts.</p>;
+  }
+
+  // Handle case where no posts are found
+  if (!posts || posts.length === 0) {
+    return <p>No job posts found matching your criteria.</p>;
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {posts.data?.map((job) => (
+      {posts.map((job) => (
         <Card key={job.postId} className="flex flex-col bg-white/50">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
