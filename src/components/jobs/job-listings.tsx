@@ -196,8 +196,7 @@ export default function JobListings() {
                   ))}
                 </div>
               </div>
-              <Button onClick={() => setSearch(null)}>Clear</Button>
-              <Button type="submit">Submit</Button>
+              <Button className="w-24" onClick={() => setSearch(null)}>Clear</Button>
             </div>
           </CardContent>
         </Card>
