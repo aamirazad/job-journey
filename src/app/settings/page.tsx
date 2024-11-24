@@ -1,34 +1,13 @@
-import FormWrapper from "@/components/auth/form-wrapper";
-import { Button } from "@/components/ui/button";
+import Settings from "@/components/auth/settings";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 
-export default function UserSettings() {
-  return (
-    <FormWrapper>
-      <form>
-        <div>
-          <label>
-            Name:
-            <input type="text" />
-          </label>
-        </div>
-        <div>
-          <label>
-            Email:
-            <input type="email" />
-          </label>
-        </div>
-        <div>
-          <label>
-            Role:
-            <select>
-              <option value="STUDENT">STUDENT</option>
-              <option value="TEACHER">TEACHER</option>
-              {/* Add more roles as needed */}
-            </select>
-          </label>
-        </div>
-        <Button type="submit">Update</Button>
-      </form>
-    </FormWrapper>
-  );
+export default async function UserSettingsPage() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
+  return <Settings session={session} />;
 }

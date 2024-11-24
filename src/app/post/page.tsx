@@ -9,5 +9,5 @@ export default async function PostPage() {
     return redirect("/auth/login");
   }
 
-  return <PostJob {...session} />;
+  return <PostJob session={session} />;
 }
