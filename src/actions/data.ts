@@ -5,6 +5,7 @@ import { db } from "@/server/db";
 import { posts } from "@/server/db/schema";
 import type { Session } from "next-auth";
 import type * as z from "zod";
+import { desc } from "drizzle-orm";
 
 export async function getUserByEmail(email: string) {
   try {
@@ -30,8 +31,10 @@ export async function getUserById(id: string) {
 
 export async function getJobPosts() {
   try {
-    const posts = await db.query.posts.findMany();
-    return posts;
+    const result = await db.query.posts.findMany({
+      orderBy: [desc(posts.dateCreated)],
+    });
+    return result;
   } catch {
     return null;
   }

@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { USER_ROLES_WITHOUT_ADMIN } from "@/server/db/schema";
+import { USER_ROLES_WITHOUT_ADMIN } from "@/schemas";
 import { redirect } from "next/navigation";
 
 export default function SignUpForm() {
