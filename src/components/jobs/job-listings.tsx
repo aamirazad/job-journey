@@ -26,73 +26,39 @@ import { getJobPosts } from "@/actions/data";
 import LoadingSpinner from "@/components/loading-spinner";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
+import { type EmploymentType, employmentTypeValues } from "@/schemas";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
-const formSchema = z.object({
-  search: z.string(),
-});
+function useDebouncedValue<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
-function Filters() {
-  const [search, setSearch] = useQueryState("search");
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler); // Cleanup on value or delay change
+  }, [value, delay]);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      search: "",
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
-
-  return (
-    <Card className="h-fit flex-none bg-white/10">
-      <CardHeader>
-        <CardTitle>Filters</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="search"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Search" onChangeCapture={e => setSearch(e.target.value)} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
-  );
+  return debouncedValue;
 }
 
-function Listings() {
+interface ListingsProps {
+  search?: string;
+  employmentTypes?: EmploymentType[];
+}
+
+function Listings({ search, employmentTypes }: ListingsProps) {
+  const debouncedSearch = useDebouncedValue(search, 500);
+
   const posts = useQuery({
-    queryKey: ["posts"],
-    queryFn: getJobPosts,
+    queryKey: ["posts", debouncedSearch, employmentTypes],
+    queryFn: async () => {
+      const data = await getJobPosts({ search: debouncedSearch, employmentTypes });
+      return data;
+    },
   });
 
   if (posts.isLoading) {
@@ -152,13 +118,65 @@ function Listings() {
 }
 
 export default function JobListings() {
+  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
+  const [employmentTypes, setEmploymentTypes] = useQueryState<EmploymentType[]>(
+    "employmentTypes",
+    {
+      defaultValue: [],
+      parse: (value): EmploymentType[] => {
+        if (!value) return [];
+        const types = value.split(",") as EmploymentType[];
+        return types.filter((type) => employmentTypeValues.includes(type));
+      },
+      serialize: (value) => value.join(","),
+    },
+  );
+
+  const handleCheckedChange = async (type: EmploymentType) => {
+    if (employmentTypes.includes(type)) {
+      await setEmploymentTypes(employmentTypes.filter((t) => t !== type));
+    } else {
+      await setEmploymentTypes([...employmentTypes, type]);
+    }
+  };
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="mb-6 text-3xl font-bold">Explore Job Opportunities</h1>
       <div className="mt-8 flex gap-8">
-        <Filters />
+        <Card className="h-fit flex-none bg-white/10">
+          <CardHeader>
+            <CardTitle>Filters</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex-col space-y-4">
+              <Input
+                value={search || ""}
+                placeholder="Search"
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <div>
+                <Separator className="my-4" />
+                <div className="flex flex-col gap-4">
+                  {employmentTypeValues.map((type) => (
+                    <div key={type} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={type}
+                        checked={employmentTypes.includes(type)}
+                        onCheckedChange={() => handleCheckedChange(type)}
+                      />
+                      <Label htmlFor={type}>{type}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <Button onClick={() => setSearch(null)}>Clear</Button>
+              <Button type="submit">Submit</Button>
+            </div>
+          </CardContent>
+        </Card>
         <QueryClientProvider client={queryClient}>
-          <Listings />
+          <Listings search={search} employmentTypes={employmentTypes} />
         </QueryClientProvider>
       </div>
     </div>

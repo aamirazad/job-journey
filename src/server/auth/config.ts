@@ -8,7 +8,7 @@ import { LoginSchema } from "@/schemas";
 import { compare } from "bcryptjs";
 import { getUserByEmail } from "@/actions/data";
 import { getUserById } from "@/actions/data";
-import type { UserRole } from "@/server/db/schema";
+import type { UserRole } from "@/schemas";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
