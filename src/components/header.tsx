@@ -31,7 +31,7 @@ async function UserDialog() {
     <AlertDialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="border-primary">
             {session.user.image ? (
               <Image
                 src={session.user.image}

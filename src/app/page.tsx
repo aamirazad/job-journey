@@ -18,11 +18,15 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="w-full max-w-sm space-y-2">
-              <form className="flex w-full max-w-md flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
+              <form
+                className="flex w-full max-w-md flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
+                action="/jobs"
+              >
                 <Input
                   className="flex-1"
                   placeholder="Search jobs..."
                   type="search"
+                  name="search"
                 />
                 <Button type="submit" className="w-full sm:w-auto">
                   <Search className="mr-2 h-4 w-4" />

@@ -1,3 +1,4 @@
+import { USER_ROLES } from "@/schemas";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
@@ -12,11 +13,6 @@ import {
   serial,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-
-export const USER_ROLES = ["ADMIN", "STUDENT", "EMPLOYER"] as const;
-export const USER_ROLES_WITHOUT_ADMIN = ["STUDENT", "EMPLOYER"] as const;
-export type UserRole = (typeof USER_ROLES)[number];
-import { createInsertSchema } from "drizzle-zod";
 
 // Create the PostgreSQL enum type
 export const userRoleEnum = pgEnum("user_role", USER_ROLES);
@@ -104,8 +100,7 @@ export const posts = createTable("posts", {
   location: varchar("location", { length: 255 }).notNull(),
 
   // Job details
-  employmentType: varchar("employment_type", { length: 50 }) // Full-time, Part-time, Contract, etc.
-    .notNull(),
+  employmentType: varchar("employment_type").notNull(),
   workplaceType: varchar("workplace_type", { length: 50 }), // Remote, Hybrid, On-site
   experienceLevel: varchar("experience_level", { length: 50 }), // Entry, Mid, Senior
   salaryMin: integer("salary_min"),
@@ -117,5 +112,3 @@ export const posts = createTable("posts", {
   responsibilities: text("responsibilities"),
   benefits: text("benefits"),
 });
-
-export const insertPostSchema = createInsertSchema(users);
