@@ -80,7 +80,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 
 export const posts = createTable("posts", {
   // Internal
-  postId: serial("post-id").primaryKey(),
+  postId: serial("post_id").notNull().primaryKey(),
 
   // Metrics
   dateCreated: timestamp("dateCreated", {
@@ -100,7 +100,7 @@ export const posts = createTable("posts", {
   location: varchar("location", { length: 255 }).notNull(),
 
   // Job details
-  employmentType: varchar("employment_type").notNull(),
+  employmentType: varchar("employment_type", { length: 50 }).notNull(),
   workplaceType: varchar("workplace_type", { length: 50 }), // Remote, Hybrid, On-site
   experienceLevel: varchar("experience_level", { length: 50 }), // Entry, Mid, Senior
   salaryMin: integer("salary_min"),
