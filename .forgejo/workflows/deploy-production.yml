@@ -20,4 +20,4 @@ jobs:
       - name: Install Vercel CLI
         run: bun install --global vercel@latest
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --no-wait --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
