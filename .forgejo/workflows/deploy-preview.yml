@@ -15,13 +15,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            ~/.bun/install/cache      
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}-v2
       - name: Install Vercel CLI
         run: bun install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --no-wait --token=${{ secrets.VERCEL_TOKEN }}
