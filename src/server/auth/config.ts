@@ -75,6 +75,8 @@ export const authConfig = {
       if (!existingUser) return token;
 
       token.role = existingUser.role;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       return token;
     },
   },

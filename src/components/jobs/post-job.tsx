@@ -29,7 +29,7 @@ import { createJobPost } from "@/actions/data";
 import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
 
-export default function PostJob(session: Session) {
+export default function PostJob({ session }: { session: Session }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof jobPostSchema>>({
     resolver: zodResolver(jobPostSchema),

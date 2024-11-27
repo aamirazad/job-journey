@@ -11,26 +11,36 @@ import Link from "next/link";
 
 interface FormWrapperProps {
   children: React.ReactNode;
-  header: string;
-  description: string;
-  backButtonLabel: string;
-  backButtonHref: string;
-  click: string;
+  header?: string;
+  description?: string;
+  backButtonLabel?: string;
+  backButtonHref?: string;
+  click?: string;
 }
 
-export default function FormWrapper({ children, header, description, backButtonLabel, backButtonHref, click }: FormWrapperProps) {
+export default function FormWrapper({
+  children,
+  header,
+  description,
+  backButtonLabel,
+  backButtonHref,
+  click,
+}: FormWrapperProps) {
   return (
     <Card className="mx-auto max-w-sm bg-white/50">
       <CardHeader>
         <CardTitle className="text-2xl">{header}</CardTitle>
-        <CardDescription>
-          {description}
-        </CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>
-      <CardFooter>
-          {backButtonLabel} <Button variant="link" asChild><Link href={backButtonHref}>{click}</Link></Button>
-      </CardFooter>
+      {backButtonHref ? (
+        <CardFooter>
+          {backButtonLabel}
+          <Button variant="link" asChild>
+            <Link href={backButtonHref}>{click}</Link>
+          </Button>
+        </CardFooter>
+      ) : null}
     </Card>
   );
 }

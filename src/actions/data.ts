@@ -2,10 +2,11 @@
 
 import type { jobPostSchema } from "@/schemas";
 import { db } from "@/server/db";
-import { posts } from "@/server/db/schema";
+import { posts, users } from "@/server/db/schema";
 import type { Session } from "next-auth";
 import type * as z from "zod";
-import { desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
+import type { SettingsSchema } from "@/components/auth/settings";
 
 export async function getUserByEmail(email: string) {
   try {
@@ -76,5 +77,28 @@ export async function createJobPost(
   } catch (error) {
     console.error("Failed to create job post:", error);
     return { error: "Failed to create job post" };
+  }
+}
+
+export async function setUserSettings(
+  values: z.infer<typeof SettingsSchema>,
+  session: Session,
+) {
+  if (!session) {
+    return { error: "Not authorized" };
+  }
+
+  try {
+    await db
+      .update(users)
+      .set({
+        ...values,
+      })
+      .where(eq(users.id, session.user.id))
+      .returning({ updatedId: users.id });
+
+    return { success: true };
+  } catch {
+    return { error: "Failed to update user settings" };
   }
 }
