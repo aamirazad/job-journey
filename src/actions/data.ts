@@ -1,8 +1,8 @@
 "use server";
 
-import type { jobPostSchema } from "@/schemas";
+import type { ApplicationFormSchema, jobPostSchema } from "@/schemas";
 import { db } from "@/server/db";
-import { posts, users } from "@/server/db/schema";
+import { applications, posts, users } from "@/server/db/schema";
 import type { Session } from "next-auth";
 import type * as z from "zod";
 import { eq, desc } from "drizzle-orm";
@@ -100,5 +100,34 @@ export async function setUserSettings(
     return { success: true };
   } catch {
     return { error: "Failed to update user settings" };
+  }
+}
+
+export async function handleJobApplication(
+  values: z.infer<typeof ApplicationFormSchema>,
+  session: Session,
+  postId: number,
+) {
+  if (!session.user) {
+    return { error: "Unauthorized" };
+  }
+  await db.insert(applications).values({
+    ...values,
+    userId: String(session.user.id),
+    postId: postId,
+  });
+  return { success: true };
+
+  return { error: "Failed to post application" };
+}
+
+export async function getPostNameFromId(id: number) {
+  try {
+    const post = await db.query.posts.findFirst({
+      where: eq(posts.postId, id),
+    });
+    return post;
+  } catch {
+    return null;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -31,15 +31,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import { set } from "zod";
+import type { Session } from "next-auth";
 
 const queryClient = new QueryClient();
 
 interface ListingsProps {
   search?: string;
   employmentTypes?: EmploymentType[];
+  session: Session | null;
 }
-function Listings({ search, employmentTypes }: ListingsProps) {
+function Listings({ search, employmentTypes, session }: ListingsProps) {
   // Fetch all job posts using react-query and cache them locally
   const {
     data: jobPosts,
@@ -137,6 +138,14 @@ function Listings({ search, employmentTypes }: ListingsProps) {
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Link>
             </Button>
+            {session?.user.role === "STUDENT" ? (
+              <Link
+                className={buttonVariants({ variant: "outline" })}
+                href={`/apply/${job.postId}`}
+              >
+                Apply
+              </Link>
+            ) : null}
           </CardFooter>
         </Card>
       ))}
@@ -144,7 +153,7 @@ function Listings({ search, employmentTypes }: ListingsProps) {
   );
 }
 
-export default function JobListings() {
+export default function JobListings({ session }: { session: Session | null }) {
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const [employmentTypes, setEmploymentTypes] = useQueryState<EmploymentType[]>(
     "employmentTypes",
@@ -209,7 +218,11 @@ export default function JobListings() {
           </CardContent>
         </Card>
         <QueryClientProvider client={queryClient}>
-          <Listings search={search} employmentTypes={employmentTypes} />
+          <Listings
+            search={search}
+            employmentTypes={employmentTypes}
+            session={session}
+          />
         </QueryClientProvider>
       </div>
     </div>

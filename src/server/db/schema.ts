@@ -17,13 +17,19 @@ import { type AdapterAccount } from "next-auth/adapters";
 // Create the PostgreSQL enum type
 export const userRoleEnum = pgEnum("user_role", USER_ROLES);
 
+export const applicationStatusEnum = pgEnum("application_status", [
+  "APPLIED",
+  "REJECTED",
+  "ACCEPTED",
+]);
+
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = pgTableCreator((name) => `job-applications_${name}`);
+export const createTable = pgTableCreator((name) => `japp_${name}`);
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
@@ -112,3 +118,61 @@ export const posts = createTable("posts", {
   responsibilities: text("responsibilities"),
   benefits: text("benefits"),
 });
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [posts.ownerId],
+    references: [users.id],
+  }),
+  applications: many(applications),
+}));
+
+export const applications = createTable("applications", {
+  id: serial("id").notNull().primaryKey(),
+  postId: integer("post_id")
+    .notNull()
+    .references(() => posts.postId, { onDelete: "cascade" }),
+
+  // Personal Information
+  firstName: varchar("first_name", { length: 50 }).notNull(),
+  lastName: varchar("last_name", { length: 50 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
+  phoneNumber: varchar("phone_number", { length: 50 }).notNull(),
+
+  // User and Application Tracking
+  userId: varchar("user_id", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+
+  // Document References
+  resumeId: varchar("resume_id", { length: 255 }),
+  coverLetterId: varchar("cover_letter_id", { length: 255 }),
+
+  // Application Status Tracking
+  status: applicationStatusEnum("status").default("APPLIED").notNull(),
+
+  // Timestamps
+  dateApplied: timestamp("date_applied", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
+
+  dateUpdated: timestamp("date_updated", {
+    mode: "date",
+    withTimezone: true,
+  }).default(sql`CURRENT_TIMESTAMP`),
+
+  // Additional application metadata
+  isWithdrawn: boolean("is_withdrawn").default(false).notNull(),
+});
+
+export const applicationsRelations = relations(applications, ({ one }) => ({
+  post: one(posts, {
+    fields: [applications.postId],
+    references: [posts.postId],
+  }),
+  owner: one(users, {
+    fields: [applications.userId],
+    references: [users.id],
+  }),
+}));
