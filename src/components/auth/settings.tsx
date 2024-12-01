@@ -26,7 +26,7 @@ import {
 import { setUserSettings } from "@/actions/actions";
 import { toast } from "sonner";
 import { FormInfo } from "@/components/auth/form-info";
-import { capitalizefrstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 export const SettingsSchema = z.object({
   name: z.string().min(2, {
@@ -118,7 +118,7 @@ export default function Settings({ session }: { session: Session }) {
                 <SelectContent>
                   {USER_ROLES_WITHOUT_ADMIN.map((role) => (
                     <SelectItem key={role} value={role}>
-                      {capitalizefrstLetter(role)}
+                      {capitalizeFirstLetter(role)}
                     </SelectItem>
                   ))}
                 </SelectContent>

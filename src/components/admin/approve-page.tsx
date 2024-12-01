@@ -46,12 +46,20 @@ function Block() {
     return <BodyMessage>No posts to review</BodyMessage>;
   }
 
-  const handleJobAction = (id: number, action: "accept" | "reject") => {
+  const handleJobAction = (
+    id: number,
+    action: "UNREVIEWED" | "ACCEPTED" | "REJECTED",
+  ) => {
     startTransition(async () => {
       const res = await reviewJobPosting(id, action);
       if (res.success) {
         await queryClient.invalidateQueries({ queryKey: ["posts"] });
-        toast.success(`Succesfully ${action}ed job posting`);
+        toast.success(`Succesfully ${action.toLowerCase()} job posting`, {
+          action: {
+            label: "Undo",
+            onClick: () => handleJobAction(id, "UNREVIEWED"),
+          },
+        });
       } else if (res.error) {
         toast.error(res.error);
       } else {
@@ -84,7 +92,7 @@ function Block() {
               <div className="space-x-2">
                 <Button
                   size="sm"
-                  onClick={() => handleJobAction(job.postId, "accept")}
+                  onClick={() => handleJobAction(job.postId, "ACCEPTED")}
                   disabled={isPending}
                 >
                   Accept
@@ -93,7 +101,7 @@ function Block() {
                   size="sm"
                   variant="destructive"
                   disabled={isPending}
-                  onClick={() => handleJobAction(job.postId, "reject")}
+                  onClick={() => handleJobAction(job.postId, "REJECTED")}
                 >
                   Reject
                 </Button>
