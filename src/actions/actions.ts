@@ -4,12 +4,7 @@ import { type SettingsSchema } from "@/components/auth/settings";
 import { type jobPostSchema, type ApplicationFormSchema } from "@/schemas";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import {
-  applications,
-  posts,
-  users,
-  type postStatusEnum,
-} from "@/server/db/schema";
+import { applications, posts, users } from "@/server/db/schema";
 import { desc, eq, not } from "drizzle-orm";
 import { type z } from "zod";
 
@@ -116,7 +111,8 @@ export async function setUserSettings(values: z.infer<typeof SettingsSchema>) {
       .returning({ updatedId: users.id });
 
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error(error);
     return { error: "Failed to update user settings" };
   }
 }
@@ -131,7 +127,8 @@ export async function getPostNameFromId(id: number) {
       where: eq(posts.postId, id),
     });
     return post;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return null;
   }
 }
@@ -146,7 +143,8 @@ export async function getJobPosts() {
       orderBy: [desc(posts.dateCreated)],
     });
     return result;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return null;
   }
 }
@@ -158,7 +156,8 @@ export async function getReviewedJobPosts() {
       orderBy: [desc(posts.dateCreated)],
     });
     return result;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return new Error("Failed to get reviewed job postings");
   }
 }
@@ -174,7 +173,8 @@ export async function getUnreviewedJobPosts() {
       orderBy: [desc(posts.dateCreated)],
     });
     return result;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return new Error("Failed to get unreviewed job postings");
   }
   return new Error("Failed to get unreviewed job postings");
@@ -182,7 +182,7 @@ export async function getUnreviewedJobPosts() {
 
 export async function reviewJobPosting(
   id: number,
-  status: "UNREVIEWED" | "ACCEPTED" | "REJECTED",
+  status: "UNREVIEWED" | "ACCEPTED" | "DELETED",
 ) {
   const session = await auth();
   if (!session) {
@@ -191,7 +191,8 @@ export async function reviewJobPosting(
   try {
     await db.update(posts).set({ status: status }).where(eq(posts.postId, id));
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error(error);
     return { error: "Failed to review job posting" };
   }
 }
@@ -206,7 +207,8 @@ export async function getJobPost(id: number) {
       where: eq(posts.postId, id),
     });
     return post;
-  } catch {
+  } catch (error) {
+    console.error(error);
     return null;
   }
 }

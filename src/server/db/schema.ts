@@ -26,7 +26,7 @@ export const applicationStatusEnum = pgEnum("application_status", [
 export const postStatusEnum = pgEnum("post_status", [
   "UNREVIEWED",
   "ACCEPTED",
-  "REJECTED",
+  "DELETED",
 ]);
 
 /**

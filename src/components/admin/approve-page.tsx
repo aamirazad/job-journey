@@ -48,7 +48,7 @@ function Block() {
 
   const handleJobAction = (
     id: number,
-    action: "UNREVIEWED" | "ACCEPTED" | "REJECTED",
+    action: "UNREVIEWED" | "ACCEPTED" | "DELETED",
   ) => {
     startTransition(async () => {
       const res = await reviewJobPosting(id, action);
@@ -101,9 +101,9 @@ function Block() {
                   size="sm"
                   variant="destructive"
                   disabled={isPending}
-                  onClick={() => handleJobAction(job.postId, "REJECTED")}
+                  onClick={() => handleJobAction(job.postId, "DELETED")}
                 >
-                  Reject
+                  Delete
                 </Button>
               </div>
             </TableCell>
