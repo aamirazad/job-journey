@@ -26,11 +26,16 @@ import type * as z from "zod";
 import BodyMessage from "@/components/body-message";
 import { toast } from "sonner";
 import { createJobPost } from "@/actions/actions";
-import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
+import { useState } from "react";
 
-export default function PostJob({ session }: { session: Session }) {
-  const router = useRouter();
+function PostForm({
+  session,
+  refreshPage,
+}: {
+  session: Session;
+  refreshPage: () => void;
+}) {
   const form = useForm<z.infer<typeof jobPostSchema>>({
     resolver: zodResolver(jobPostSchema),
     defaultValues: {
@@ -68,7 +73,7 @@ export default function PostJob({ session }: { session: Session }) {
       }
 
       toast.success("Job post created successfully!");
-      router.push(`/job/${result.id}`);
+      refreshPage();
     } catch {
       toast("Error posting job. Please try again.");
     }
@@ -310,6 +315,18 @@ export default function PostJob({ session }: { session: Session }) {
           <Button type="submit">Submit Job Posting</Button>
         </form>
       </Form>
+    </div>
+  );
+}
+
+export function PostJob({ session }: { session: Session }) {
+  const [key, setKey] = useState(0);
+  const refreshPage = () => {
+    setKey((prevKey) => prevKey + 1);
+  };
+  return (
+    <div key={key}>
+      <PostForm session={session} refreshPage={refreshPage} />
     </div>
   );
 }

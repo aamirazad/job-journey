@@ -1,4 +1,4 @@
-import PostJob from "@/components/jobs/post-job";
+import { PostJob } from "@/components/jobs/post-job";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 
