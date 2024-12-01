@@ -147,10 +147,6 @@ export async function getJobPosts() {
 }
 
 export async function getReviewedJobPosts() {
-  const session = await auth();
-  if (!session) {
-    return new Error("Unauthorized");
-  }
   try {
     const result = await db.query.posts.findMany({
       where: eq(posts.status, "ACCEPTED"),
