@@ -4,7 +4,12 @@ import { type SettingsSchema } from "@/components/auth/settings";
 import { type jobPostSchema, type ApplicationFormSchema } from "@/schemas";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { applications, posts, users } from "@/server/db/schema";
+import {
+  applications,
+  posts,
+  users,
+  type postStatusEnum,
+} from "@/server/db/schema";
 import { desc, eq, not } from "drizzle-orm";
 import { type z } from "zod";
 
@@ -177,24 +182,14 @@ export async function getUnreviewedJobPosts() {
 
 export async function reviewJobPosting(
   id: number,
-  action: "accept" | "reject",
+  status: "UNREVIEWED" | "ACCEPTED" | "REJECTED",
 ) {
   const session = await auth();
   if (!session) {
     return { error: "Unauthorized" };
   }
   try {
-    if (action === "accept") {
-      await db
-        .update(posts)
-        .set({ status: "ACCEPTED" })
-        .where(eq(posts.postId, id));
-    } else if (action === "reject") {
-      await db
-        .update(posts)
-        .set({ status: "REJECTED" })
-        .where(eq(posts.postId, id));
-    }
+    await db.update(posts).set({ status: status }).where(eq(posts.postId, id));
     return { success: true };
   } catch {
     return { error: "Failed to review job posting" };
