@@ -98,7 +98,9 @@ export const posts = createTable("posts", {
   dateCreated: timestamp("dateCreated", {
     mode: "date",
     withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   status: postStatusEnum("status").notNull().default("UNREVIEWED"),
   // Relations
   ownerId: varchar("owner_id", { length: 255 })
@@ -123,6 +125,8 @@ export const posts = createTable("posts", {
   responsibilities: text("responsibilities"),
   benefits: text("benefits"),
 });
+
+export type JobPost = typeof posts.$inferSelect;
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
   owner: one(users, {

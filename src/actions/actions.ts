@@ -204,3 +204,18 @@ export async function reviewJobPosting(
     return { error: "Failed to review job posting" };
   }
 }
+
+export async function getJobPost(id: number) {
+  const session = await auth();
+  if (!session) {
+    return null;
+  }
+  try {
+    const post = await db.query.posts.findFirst({
+      where: eq(posts.postId, id),
+    });
+    return post;
+  } catch {
+    return null;
+  }
+}
