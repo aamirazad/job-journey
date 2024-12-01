@@ -53,7 +53,7 @@ async function UserDialog() {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="settings">Settings</Link>
+            <Link href="/settings">Settings</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <AlertDialogTrigger>
