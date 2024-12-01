@@ -23,6 +23,12 @@ export const applicationStatusEnum = pgEnum("application_status", [
   "ACCEPTED",
 ]);
 
+export const postStatusEnum = pgEnum("post_status", [
+  "UNREVIEWED",
+  "ACCEPTED",
+  "REJECTED",
+]);
+
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
  * database instance for multiple projects.
@@ -93,8 +99,7 @@ export const posts = createTable("posts", {
     mode: "date",
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
-  reviewed: boolean("reviewed").default(false).notNull(),
-
+  status: postStatusEnum("status").notNull().default("UNREVIEWED"),
   // Relations
   ownerId: varchar("owner_id", { length: 255 })
     .notNull()

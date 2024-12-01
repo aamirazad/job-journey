@@ -25,7 +25,7 @@ import { jobPostSchema } from "@/schemas";
 import type * as z from "zod";
 import BodyMessage from "@/components/body-message";
 import { toast } from "sonner";
-import { createJobPost } from "@/actions/data";
+import { createJobPost } from "@/actions/actions";
 import { useRouter } from "next/navigation";
 import type { Session } from "next-auth";
 
@@ -60,7 +60,7 @@ export default function PostJob({ session }: { session: Session }) {
       if (!session || !["EMPLOYER", "ADMIN"].includes(session.user.role)) {
         return { error: "Not authorized" };
       }
-      const result = await createJobPost(values, session);
+      const result = await createJobPost(values);
 
       if ("error" in result) {
         toast.error(result.error);
@@ -75,7 +75,7 @@ export default function PostJob({ session }: { session: Session }) {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto p-4">
       <h1 className="mb-6 text-3xl font-bold">Post a New Job</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

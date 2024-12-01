@@ -23,8 +23,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { setUserSettings } from "@/actions/data";
+import { setUserSettings } from "@/actions/actions";
 import { toast } from "sonner";
+import { FormInfo } from "@/components/auth/form-info";
+import { capitalizefrstLetter } from "@/lib/utils";
 
 export const SettingsSchema = z.object({
   name: z.string().min(2, {
@@ -52,7 +54,7 @@ export default function Settings({ session }: { session: Session }) {
   async function onSubmit(values: z.infer<typeof SettingsSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    await setUserSettings(values, session).then((data) => {
+    await setUserSettings(values).then((data) => {
       if (data.success) {
         toast.success("Settings updated successfully!");
       } else {
@@ -104,15 +106,19 @@ export default function Settings({ session }: { session: Session }) {
               <FormLabel>Role</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
+                  <div className="space-y-2">
+                    {session.user.role === "ADMIN" ? (
+                      <FormInfo message="You are an admin. You can change your role to a different type, but you will not be able to change it back." />
+                    ) : null}
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                  </div>
                 </FormControl>
                 <SelectContent>
                   {USER_ROLES_WITHOUT_ADMIN.map((role) => (
                     <SelectItem key={role} value={role}>
-                      {role.charAt(0).toUpperCase() +
-                        role.slice(1).toLowerCase()}
+                      {capitalizefrstLetter(role)}
                     </SelectItem>
                   ))}
                 </SelectContent>

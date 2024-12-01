@@ -1,0 +1,17 @@
+import { Info } from "lucide-react";
+
+interface FormSuccessProps {
+  message?: string;
+}
+
+export function FormInfo({ message }: FormSuccessProps) {
+  if (!message) {
+    return null;
+  }
+  return (
+    <div className="flex items-center gap-x-2 rounded-md bg-orange-500/15 p-3 text-sm text-orange-500">
+      <Info className="h-4 w-4 flex-none" />
+      <p className="flex-shrink">{message}</p>
+    </div>
+  );
+}

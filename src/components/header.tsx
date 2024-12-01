@@ -15,6 +15,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -64,6 +65,9 @@ async function UserDialog() {
             <AlertDialogTitle>
               Are you sure you want to sign out?
             </AlertDialogTitle>
+            <AlertDialogDescription>
+              Any unsaved changes will be lost.
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -98,6 +102,12 @@ export default async function Header() {
         <Link className={buttonVariants({ variant: "link" })} href="/post">
           Post a Job
         </Link>
+        {session?.user.role === "ADMIN" ? (
+          <Link className={buttonVariants({ variant: "link" })} href="/admin">
+            Admin
+          </Link>
+        ) : null}
+
         {session ? (
           <UserDialog />
         ) : (

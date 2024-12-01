@@ -1,4 +1,4 @@
-import { getPostNameFromId } from "@/actions/data";
+import { getPostNameFromId } from "@/actions/actions";
 import FormWrapper from "@/components/auth/form-wrapper";
 import BodyMessage from "@/components/body-message";
 import ApplicationForm from "@/components/jobs/application-form";
@@ -25,7 +25,7 @@ export default async function ApplyPage({
 
   return (
     <FormWrapper header={post?.title}>
-      <ApplicationForm postId={postId} session={session} />
+      <ApplicationForm postId={postId} />
     </FormWrapper>
   );
 }

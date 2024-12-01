@@ -22,7 +22,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { getJobPosts } from "@/actions/data";
+import { getReviewedJobPosts } from "@/actions/actions";
 import LoadingSpinner from "@/components/loading-spinner";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
@@ -32,6 +32,7 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import type { Session } from "next-auth";
+import BodyMessage from "../body-message";
 
 const queryClient = new QueryClient();
 
@@ -42,13 +43,9 @@ interface ListingsProps {
 }
 function Listings({ search, employmentTypes, session }: ListingsProps) {
   // Fetch all job posts using react-query and cache them locally
-  const {
-    data: jobPosts,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: jobPosts, isLoading } = useQuery({
     queryKey: ["posts"],
-    queryFn: getJobPosts,
+    queryFn: getReviewedJobPosts,
   });
 
   // Local state to store filtered job posts
@@ -57,7 +54,7 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
   // Filter job posts whenever search, employmentTypes, or jobPosts change
   useEffect(() => {
     const filterJobPosts = () => {
-      if (!jobPosts) return [];
+      if (!jobPosts || jobPosts instanceof Error) return [];
 
       return jobPosts.filter((job) => {
         // Filter by search term (case-insensitive match for the title)
@@ -84,13 +81,17 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
     return <LoadingSpinner />;
   }
 
-  if (error) {
-    return <p>Error fetching job posts.</p>;
+  if (posts instanceof Error) {
+    return <BodyMessage className="text-center">{posts.message}</BodyMessage>;
   }
 
   // Handle case where no posts are found
   if (!posts || posts.length === 0) {
-    return <p>No job posts found matching your criteria.</p>;
+    return (
+      <BodyMessage className="text-center">
+        No job posts found matching your criteria.
+      </BodyMessage>
+    );
   }
 
   return (
@@ -182,7 +183,7 @@ export default function JobListings({ session }: { session: Session | null }) {
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto p-4">
       <h1 className="mb-6 text-3xl font-bold">Explore Job Opportunities</h1>
       <div className="mt-8 flex gap-8">
         <Card className="h-fit flex-none bg-white/10">

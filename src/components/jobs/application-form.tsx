@@ -17,16 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
-import { handleJobApplication } from "@/actions/data";
-import { type Session } from "next-auth";
+import { handleJobApplication } from "@/actions/actions";
 
-export default function ApplicationForm({
-  postId,
-  session,
-}: {
-  postId: number;
-  session: Session;
-}) {
+export default function ApplicationForm({ postId }: { postId: number }) {
   const form = useForm<z.infer<typeof ApplicationFormSchema>>({
     resolver: zodResolver(ApplicationFormSchema),
     defaultValues: {
@@ -52,7 +45,7 @@ export default function ApplicationForm({
 
   async function onSubmit(values: z.infer<typeof ApplicationFormSchema>) {
     // Now the form values include the PDF links
-    const result = await handleJobApplication(values, session, postId);
+    const result = await handleJobApplication(values, postId);
     if ("error" in result) {
       toast.error(result.error);
     } else {

@@ -8,7 +8,7 @@ import { users } from "@/server/db/schema";
 import { signIn } from "@/server/auth/index";
 import { DEFUALT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
-import { getUserByEmail } from "@/actions/data";
+import { getUserByEmail } from "@/actions/auth2";
 
 export async function signup(values: z.infer<typeof SignUpSchema>) {
   const validatedFields = SignUpSchema.safeParse(values);

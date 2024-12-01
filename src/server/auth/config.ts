@@ -6,8 +6,8 @@ import { accounts, users } from "@/server/db/schema";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
 import { compare } from "bcryptjs";
-import { getUserByEmail } from "@/actions/data";
-import { getUserById } from "@/actions/data";
+import { getUserByEmail } from "@/actions/auth2";
+import { getUserById } from "@/actions/auth2";
 import type { UserRole } from "@/schemas";
 
 /**
