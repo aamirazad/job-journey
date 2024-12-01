@@ -22,6 +22,9 @@ export default async function ApplyPage({
 
   const postId = (await params).postId;
   const post = await getPostNameFromId(postId);
+  if (!post) {
+    return <BodyMessage>Post not found</BodyMessage>;
+  }
 
   return (
     <FormWrapper header={post?.title}>
