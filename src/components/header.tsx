@@ -1,5 +1,11 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import { GraduationCap } from "lucide-react";
+import {
+  AlignJustify,
+  GraduationCap,
+  LayoutDashboard,
+  Pencil,
+  Search,
+} from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -90,24 +96,29 @@ export default async function Header() {
   const session = await auth();
 
   return (
-    <header className="flex h-14 items-center px-4 lg:px-6">
+    <header className="flex h-14 items-center justify-between px-4 lg:px-6">
+      {/* Logo for all screen sizes */}
       <Link className="flex items-center justify-center" href="/">
         <GraduationCap className="h-6 w-6" />
         <span className="sr-only">Student Job Portal</span>
       </Link>
-      <nav className="ml-auto flex items-center gap-4">
+
+      {/* Desktop navigation - hidden on mobile */}
+      <nav className="ml-auto hidden items-center gap-4 sm:flex">
         <Link className={buttonVariants({ variant: "link" })} href="/jobs">
+          <Search className="h-4 w-4" />
           Find jobs
         </Link>
         <Link className={buttonVariants({ variant: "link" })} href="/post">
+          <Pencil className="h-4 w-4" />
           Post a Job
         </Link>
-        {session?.user.role === "ADMIN" ? (
+        {session?.user.role === "ADMIN" && (
           <Link className={buttonVariants({ variant: "link" })} href="/admin">
+            <LayoutDashboard />
             Admin
           </Link>
-        ) : null}
-
+        )}
         {session ? (
           <UserDialog />
         ) : (
@@ -127,6 +138,53 @@ export default async function Header() {
           </>
         )}
       </nav>
+      <div className="flex items-center gap-2 sm:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <AlignJustify />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className="flex items-center gap-2">
+              <Search className="h-4 w-4" />
+              <Link href="/jobs">Find jobs</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex items-center gap-2">
+              <Pencil className="h-4 w-4" />
+              <Link href="/post">Post a Job</Link>
+            </DropdownMenuItem>
+            {session?.user.role === "ADMIN" && (
+              <DropdownMenuItem>
+                <LayoutDashboard />
+                <Link href="/admin">Admin</Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {session ? (
+          <UserDialog />
+        ) : (
+          <>
+            <DropdownMenuItem>
+              <Link
+                href="/auth/login"
+                className={buttonVariants({ variant: "link" })}
+              >
+                Login
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                href="/auth/signup"
+                className={buttonVariants({ variant: "default" })}
+              >
+                Signup
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
+      </div>
     </header>
   );
 }
