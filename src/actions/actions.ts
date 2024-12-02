@@ -4,12 +4,7 @@ import { type SettingsSchema } from "@/components/auth/settings";
 import { type jobPostSchema, type ApplicationFormSchema } from "@/schemas";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import {
-  applications,
-  posts,
-  users,
-  type postStatusEnum,
-} from "@/server/db/schema";
+import { applications, posts, users } from "@/server/db/schema";
 import { desc, eq, not } from "drizzle-orm";
 import { type z } from "zod";
 
