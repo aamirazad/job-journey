@@ -95,7 +95,9 @@ export default async function Header() {
         <GraduationCap className="h-6 w-6" />
         <span className="sr-only">Student Job Portal</span>
       </Link>
-      <nav className="ml-auto flex items-center gap-4">
+
+      {/* Desktop navigation - hidden on mobile */}
+      <nav className="ml-auto hidden items-center gap-4 md:flex">
         <Link className={buttonVariants({ variant: "link" })} href="/jobs">
           Find jobs
         </Link>
@@ -127,6 +129,52 @@ export default async function Header() {
           </>
         )}
       </nav>
+
+      {/* Mobile dropdown - visible only on mobile */}
+      <div className="flex items-center gap-2 md:hidden">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <AlignJustify />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem className="flex items-center gap-2">
+              <Search className="h-4 w-4" />
+              <Link href="/jobs">Find jobs</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex items-center gap-2">
+              <Pencil className="h-4 w-4" />
+              <Link href="/post">Post a Job</Link>
+            </DropdownMenuItem>
+            {session?.user.role === "ADMIN" && (
+              <DropdownMenuItem>
+                <LayoutDashboard />
+                <Link href="/admin">Admin</Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {session ? (
+          <UserDialog />
+        ) : (
+          <>
+            <Link
+              href="/auth/login"
+              className={buttonVariants({ variant: "link" })}
+            >
+              Login
+            </Link>
+            <Link
+              href="/auth/signup"
+              className={buttonVariants({ variant: "default" })}
+            >
+              Signup
+            </Link>
+          </>
+        )}
+      </div>
     </header>
   );
 }
