@@ -19,48 +19,51 @@ export function DetailedJobPost({ post }: { post: JobPost }) {
   return (
     <Card className="mx-auto w-full max-w-3xl">
       <CardHeader>
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-2xl font-bold">{post.title}</CardTitle>
-            <p className="mt-1 text-muted-foreground">{post.company}</p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-auto">
+            <CardTitle className="break-words text-2xl font-bold">
+              {post.title}
+            </CardTitle>
+            <p className="mt-1 break-words text-muted-foreground">
+              {post.company}
+            </p>
           </div>
-          {post.status === "UNREVIEWED" ? (
-            <Badge className="pointer-events-none" variant="warning">
+          {post.status === "UNREVIEWED" && (
+            <Badge
+              className="pointer-events-none flex-none whitespace-nowrap"
+              variant="warning"
+            >
               Unreviewed
             </Badge>
-          ) : null}
+          )}
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-wrap gap-4">
-          <div className="flex items-center">
-            <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-            <span>{post.location}</span>
+          <div className="flex items-center break-words">
+            <MapPin className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+            <span className="break-all">{post.location}</span>
           </div>
-          <div className="flex items-center">
-            <Briefcase className="mr-2 h-4 w-4 text-muted-foreground" />
-            <span>{post.employmentType}</span>
+          <div className="flex items-center break-words">
+            <Briefcase className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+            <span className="break-all">{post.employmentType}</span>
           </div>
           {post.workplaceType && (
-            <div className="flex items-center">
-              <Building className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>{post.workplaceType}</span>
+            <div className="flex items-center break-words">
+              <Building className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <span className="break-all">{post.workplaceType}</span>
             </div>
           )}
           {post.experienceLevel && (
-            <div className="flex items-center">
-              <Award className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>{post.experienceLevel}</span>
+            <div className="flex items-center break-words">
+              <Award className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <span className="break-all">{post.experienceLevel}</span>
             </div>
           )}
-          {(post.salaryMin ?? post.salaryMax) && (
-            <div className="flex items-center">
-              <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>
-                {post.salaryMin && `$${post.salaryMin.toLocaleString()}`}
-                {post.salaryMin && post.salaryMax && " - "}
-                {post.salaryMax && `$${post.salaryMax.toLocaleString()}`}
-              </span>
+          {post.pay && (
+            <div className="flex items-center break-words">
+              <DollarSign className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <span className="break-all">{post.pay}</span>
             </div>
           )}
         </div>
@@ -72,7 +75,7 @@ export function DetailedJobPost({ post }: { post: JobPost }) {
             <FileText className="mr-2 h-5 w-5" />
             Job Description
           </h3>
-          <p className="whitespace-pre-line text-muted-foreground">
+          <p className="whitespace-pre-line break-words text-muted-foreground">
             {post.description}
           </p>
         </div>

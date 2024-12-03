@@ -45,8 +45,7 @@ function PostForm({
       employmentType: "Full-time",
       workplaceType: "On-site",
       experienceLevel: "Mid",
-      salaryMin: 0,
-      salaryMax: 0,
+      pay: "",
       description: "",
       requirements: "",
       responsibilities: "",
@@ -80,242 +79,205 @@ function PostForm({
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-6 text-3xl font-bold">Post a New Job</h1>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Job Title</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Software Engineer" {...field} />
+              </FormControl>
+              <FormDescription>
+                The title of the position you&apos;re hiring for.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="company"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Company Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Tech Innovators Inc." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. San Francisco, CA" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="pay"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Pay</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. $70,000 - $100,000" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
-            name="title"
+            name="employmentType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Job Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. Software Engineer" {...field} />
-                </FormControl>
-                <FormDescription>
-                  The title of the position you&apos;re hiring for.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="company"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. Tech Innovators Inc." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Location</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. San Francisco, CA" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="employmentType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Employment Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select employment type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Full-time">Full-time</SelectItem>
-                      <SelectItem value="Part-time">Part-time</SelectItem>
-                      <SelectItem value="Contract">Contract</SelectItem>
-                      <SelectItem value="Internship">Internship</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="workplaceType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Workplace Type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select workplace type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Remote">Remote</SelectItem>
-                      <SelectItem value="Hybrid">Hybrid</SelectItem>
-                      <SelectItem value="On-site">On-site</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
-            control={form.control}
-            name="experienceLevel"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Experience Level</FormLabel>
+                <FormLabel>Employment Type</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select experience level" />
+                      <SelectValue placeholder="Select employment type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Entry">Entry</SelectItem>
-                    <SelectItem value="Mid">Mid</SelectItem>
-                    <SelectItem value="Senior">Senior</SelectItem>
+                    <SelectItem value="Full-time">Full-time</SelectItem>
+                    <SelectItem value="Part-time">Part-time</SelectItem>
+                    <SelectItem value="Contract">Contract</SelectItem>
+                    <SelectItem value="Internship">Internship</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="salaryMin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Minimum Salary</FormLabel>
+          <FormField
+            control={form.control}
+            name="workplaceType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Workplace Type</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseInt(e.target.value, 10) : "",
-                        )
-                      }
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select workplace type" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="salaryMax"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Maximum Salary</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value ? parseInt(e.target.value, 10) : "",
-                        )
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Job Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Describe the role, responsibilities, and ideal candidate..."
-                    {...field}
-                  />
-                </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Remote">Remote</SelectItem>
+                    <SelectItem value="Hybrid">Hybrid</SelectItem>
+                    <SelectItem value="On-site">On-site</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="requirements"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Requirements (Optional)</FormLabel>
+        </div>
+        <FormField
+          control={form.control}
+          name="experienceLevel"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Experience Level</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <Textarea
-                    placeholder="List any specific requirements or qualifications..."
-                    {...field}
-                  />
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select experience level" />
+                  </SelectTrigger>
                 </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="responsibilities"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Responsibilities (Optional)</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="List the main responsibilities of the role..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="benefits"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Benefits (Optional)</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="List any benefits or perks offered with this position..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit Job Posting</Button>
-        </form>
-      </Form>
-    </div>
+                <SelectContent>
+                  <SelectItem value="Entry">Entry</SelectItem>
+                  <SelectItem value="Mid">Mid</SelectItem>
+                  <SelectItem value="Senior">Senior</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Job Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Describe the role, responsibilities, and ideal candidate..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="requirements"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Requirements (Optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="List any specific requirements or qualifications..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="responsibilities"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Responsibilities (Optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="List the main responsibilities of the role..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="benefits"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Benefits (Optional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="List any benefits or perks offered with this position..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit Job Posting</Button>
+      </form>
+    </Form>
   );
 }
 

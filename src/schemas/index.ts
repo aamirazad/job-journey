@@ -41,40 +41,45 @@ export const experienceLevelValues = ["Entry", "Mid", "Senior"] as const;
 export const jobPostSchema = z.object({
   title: z
     .string({ message: "Input a string" })
-    .min(2, { message: "Job title must be at least 2 characters." })
-    .max(255, { message: "Job title must be less than 255 characters" }),
+    .min(2, { message: "Text must be at least 2 characters." })
+    .max(50, { message: "Text must be less than 50 characters" }),
 
   company: z
     .string({ message: "Input a string" })
-    .min(2, { message: "Company name must be at least 2 characters." })
-    .max(255, { message: "Company name must be less than 255 characters" }),
+    .min(2, { message: "Text must be at least 2 characters." })
+    .max(50, { message: "Text must be less than 50 characters" }),
 
   location: z
     .string({ message: "Input a string" })
-    .min(2, { message: "Location must be at least 2 characters." })
-    .max(255, { message: "Location must be less than 255 characters" }),
+    .min(2, { message: "Text must be at least 2 characters." })
+    .max(50, { message: "Text must be less than 50 characters" }),
 
   employmentType: z.enum(employmentTypeValues),
   workplaceType: z.enum(workplaceTypeValues),
   experienceLevel: z.enum(experienceLevelValues),
 
-  salaryMin: z
-    .number({ message: "Input a number" })
-    .min(0)
-    .max(2147483647, { message: "Minimum salary must be below 2,000,000,000" }),
-
-  salaryMax: z
-    .number({ message: "Input a number" })
-    .min(0)
-    .max(2147483647, { message: "Maximum salary must be below 2,000,000,000" }),
+  pay: z
+    .string({ message: "Input a string" })
+    .min(2, { message: "Text must be at least 2 characters." })
+    .max(50, { message: "Text must be less than 50 characters" }),
 
   description: z
     .string({ message: "Input a string" })
-    .min(10, { message: "Job description must be at least 10 characters." }),
+    .min(10, { message: "Job description must be at least 10 characters." })
+    .max(2000, { message: "Text must be less than 2,000 characters" }),
 
-  requirements: z.string().optional(),
-  responsibilities: z.string().optional(),
-  benefits: z.string().optional(),
+  requirements: z
+    .string({ message: "Input a string" })
+    .max(2000, { message: "Text must be less than 2,000 characters" })
+    .optional(),
+  responsibilities: z
+    .string({ message: "Input a string" })
+    .max(2000, { message: "Text must be less than 2,000 characters" })
+    .optional(),
+  benefits: z
+    .string({ message: "Input a string" })
+    .max(2000, { message: "Text must be less than 2,000 characters" })
+    .optional(),
 });
 
 export type EmploymentType = (typeof employmentTypeValues)[number];

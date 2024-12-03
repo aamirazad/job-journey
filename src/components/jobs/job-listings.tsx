@@ -54,7 +54,7 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
   // Filter job posts whenever search, employmentTypes, or jobPosts change
   useEffect(() => {
     const filterJobPosts = () => {
-      if (!jobPosts || jobPosts instanceof Error) return [];
+      if (!jobPosts || jobPosts instanceof Error) return jobPosts;
 
       return jobPosts.filter((job) => {
         // Filter by search term (case-insensitive match for the title)
@@ -99,37 +99,46 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
       {posts.map((job) => (
         <Card key={job.postId} className="flex flex-col bg-white/50">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">{job.title}</CardTitle>
-            <p className="text-lg font-semibold text-muted-foreground">
+            <CardTitle className="overflow-hidden truncate text-ellipsis text-2xl font-bold">
+              {job.title}
+            </CardTitle>
+            <p className="overflow-hidden truncate text-ellipsis text-lg font-semibold text-muted-foreground">
               {job.company}
             </p>
           </CardHeader>
           <CardContent className="flex-grow">
             <div className="space-y-2">
               <div className="flex items-center">
-                <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>{job.location}</span>
+                <MapPin className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                <span className="overflow-hidden truncate text-ellipsis">
+                  {job.location}
+                </span>
               </div>
               <div className="flex items-center">
-                <Briefcase className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>{job.employmentType}</span>
+                <Briefcase className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                <span className="overflow-hidden truncate text-ellipsis">
+                  {job.employmentType}
+                </span>
               </div>
               <div className="flex items-center">
-                <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>{job.workplaceType}</span>
+                <Clock className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                <span className="overflow-hidden truncate text-ellipsis">
+                  {job.workplaceType}
+                </span>
               </div>
-              {job.salaryMax && job.salaryMin ? (
+              {job.pay && job.pay ? (
                 <div className="flex items-center">
-                  <DollarSign className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <span>
-                    ${job.salaryMin.toLocaleString()} - $
-                    {job.salaryMax.toLocaleString()}
+                  <DollarSign className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                  <span className="overflow-hidden truncate text-ellipsis">
+                    {job.pay.toLocaleString()}
                   </span>
                 </div>
               ) : null}
             </div>
             <div className="mt-4">
-              <Badge variant="secondary">{job.experienceLevel}</Badge>
+              <Badge variant="secondary" className="line-clamp-1">
+                {job.experienceLevel}
+              </Badge>
             </div>
           </CardContent>
           <CardFooter className="flex flex-wrap justify-between gap-2">

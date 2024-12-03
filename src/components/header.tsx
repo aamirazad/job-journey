@@ -166,22 +166,18 @@ export default async function Header() {
           <UserDialog />
         ) : (
           <>
-            <DropdownMenuItem>
-              <Link
-                href="/auth/login"
-                className={buttonVariants({ variant: "link" })}
-              >
-                Login
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="/auth/signup"
-                className={buttonVariants({ variant: "default" })}
-              >
-                Signup
-              </Link>
-            </DropdownMenuItem>
+            <Link
+              href="/auth/login"
+              className={buttonVariants({ variant: "link" })}
+            >
+              Login
+            </Link>
+            <Link
+              href="/auth/signup"
+              className={buttonVariants({ variant: "default" })}
+            >
+              Signup
+            </Link>
           </>
         )}
       </div>

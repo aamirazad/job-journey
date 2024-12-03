@@ -69,18 +69,7 @@ export async function createJobPost(values: z.infer<typeof jobPostSchema>) {
       .insert(posts)
       .values({
         ownerId: session.user.id,
-        title: values.title,
-        company: values.company,
-        location: values.location,
-        employmentType: values.employmentType,
-        workplaceType: values.workplaceType,
-        experienceLevel: values.experienceLevel,
-        salaryMin: values.salaryMin,
-        salaryMax: values.salaryMax,
-        description: values.description,
-        requirements: values.requirements ?? null,
-        responsibilities: values.responsibilities ?? null,
-        benefits: values.benefits ?? null,
+        ...values,
       })
       .returning({ postId: posts.postId });
 

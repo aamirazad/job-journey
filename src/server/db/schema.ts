@@ -116,8 +116,7 @@ export const posts = createTable("posts", {
   employmentType: varchar("employment_type", { length: 50 }).notNull(),
   workplaceType: varchar("workplace_type", { length: 50 }), // Remote, Hybrid, On-site
   experienceLevel: varchar("experience_level", { length: 50 }), // Entry, Mid, Senior
-  salaryMin: integer("salary_min"),
-  salaryMax: integer("salary_max"),
+  pay: varchar("pay", { length: 255 }),
 
   // Job description and requirements
   description: text("description").notNull(),

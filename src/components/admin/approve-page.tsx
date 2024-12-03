@@ -81,8 +81,22 @@ function Block() {
       <TableBody>
         {posts.map((job) => (
           <TableRow key={job.postId}>
-            <TableCell>{job.title}</TableCell>
-            <TableCell>{job.company}</TableCell>
+            <TableCell className="max-w-[200px]">
+              <div
+                className="overflow-hidden truncate text-ellipsis"
+                title={job.title}
+              >
+                {job.title}
+              </div>
+            </TableCell>
+            <TableCell className="max-w-[150px]">
+              <div
+                className="overflow-hidden truncate text-ellipsis"
+                title={job.company}
+              >
+                {job.company}
+              </div>
+            </TableCell>
             <TableCell>
               <Link href={`/job/${job.postId}`}>
                 <Link2 className="inline-block h-4 w-4" />
