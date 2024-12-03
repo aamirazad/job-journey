@@ -1,7 +1,7 @@
 import { getPostNameFromId } from "@/actions/actions";
-import FormWrapper from "@/components/auth/form-wrapper";
 import BodyMessage from "@/components/body-message";
 import ApplicationForm from "@/components/jobs/application-form";
+import { LargeFormWrapper } from "@/components/large-form-wrapper";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 
@@ -27,8 +27,8 @@ export default async function ApplyPage({
   }
 
   return (
-    <FormWrapper header={post?.title}>
+    <LargeFormWrapper header={post?.title} description="You got this!">
       <ApplicationForm postId={postId} />
-    </FormWrapper>
+    </LargeFormWrapper>
   );
 }
