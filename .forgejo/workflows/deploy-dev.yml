@@ -4,8 +4,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
       - dev
 jobs:
   Deploy-Preview:
@@ -21,4 +20,4 @@ jobs:
       - name: Install Vercel CLI
         run: bun install --global vercel@latest
       - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
+        run: url="$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }})" && vercel alias --token=${{ secrets.VERCEL_TOKEN }} set "$url" fbla-job-portal
