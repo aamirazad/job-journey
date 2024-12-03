@@ -132,14 +132,15 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
               <Badge variant="secondary">{job.experienceLevel}</Badge>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex flex-wrap justify-between gap-2">
             <Button asChild>
               <Link href={`/job/${job.postId}`}>
                 View Details
                 <ExternalLink className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            {session?.user.role === "STUDENT" ? (
+            {session?.user?.role &&
+            ["STUDENT", "ADMIN"].includes(session.user.role) ? (
               <Link
                 className={buttonVariants({ variant: "outline" })}
                 href={`/apply/${job.postId}`}
