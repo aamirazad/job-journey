@@ -17,7 +17,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
-import { handleJobApplication } from "@/actions/actions";
+import {
+  handleJobApplication,
+  handleSendingNotificationEmail,
+} from "@/actions/actions";
 
 export default function ApplicationForm({ postId }: { postId: number }) {
   const form = useForm<z.infer<typeof ApplicationFormSchema>>({
@@ -44,13 +47,26 @@ export default function ApplicationForm({ postId }: { postId: number }) {
   };
 
   async function onSubmit(values: z.infer<typeof ApplicationFormSchema>) {
-    // Now the form values include the PDF links
-    const result = await handleJobApplication(values, postId);
-    if ("error" in result) {
-      toast.error(result.error);
-    } else {
-      toast.success("Application posted!");
-    }
+    toast.promise(
+      async () => {
+        await handleJobApplication(values, postId);
+      },
+      {
+        loading: "Posting application",
+        success: "Application posted!",
+        error: "Error posting application",
+      },
+    );
+    toast.promise(
+      async () => {
+        await handleSendingNotificationEmail(values, postId);
+      },
+      {
+        loading: "Sending email",
+        success: "Email sent to employer!",
+        error: "Error posting application",
+      },
+    );
   }
 
   return (

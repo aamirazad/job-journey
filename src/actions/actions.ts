@@ -7,6 +7,7 @@ import { db } from "@/server/db";
 import { applications, posts, users } from "@/server/db/schema";
 import { desc, eq, not } from "drizzle-orm";
 import { type z } from "zod";
+import { sendNewApplicationEmail } from "./resend";
 
 export async function getNonAdminUsers() {
   const session = await auth();
@@ -38,6 +39,50 @@ export async function promoteUser(userId: string) {
   } catch {
     return { error: "Failed to promote" };
   }
+}
+
+export async function getEmployerEmailByPostId(postId: number) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return null;
+  }
+  const result = await db
+    .select({
+      employerEmail: users.email,
+      postTitle: posts.title,
+    })
+    .from(posts)
+    .innerJoin(users, eq(posts.ownerId, users.id))
+    .where(eq(posts.postId, postId))
+    .execute();
+
+  // This will return an array, so we'll get the first result
+  return result[0] ?? null;
+}
+
+export async function handleSendingNotificationEmail(
+  values: z.infer<typeof ApplicationFormSchema>,
+  postId: number,
+) {
+  const info = await getEmployerEmailByPostId(postId);
+  if (!info) {
+    return { error: "Error sending email (Couldn't get post info)" };
+  }
+  const result = await sendNewApplicationEmail({
+    ...info,
+    applicantFirstName: values.firstName,
+    applicantLastName: values.lastName,
+    applicantEmail: values.email,
+  });
+
+  if (result.error) {
+    return { error: result.error };
+  }
+  if (result.success) {
+    return { success: true };
+  }
+  return { error: "Unknown error" };
 }
 
 export async function handleJobApplication(

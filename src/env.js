@@ -7,14 +7,13 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    NEXTAUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? z.string()
-        : z.string().optional(),
+    NEXTAUTH_SECRET: z.string(),
     POSTGRES_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    UPLOADTHING_TOKEN: z.string(),
+    RESEND_API_KEY: z.string(),
   },
 
   /**
@@ -34,6 +33,8 @@ export const env = createEnv({
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     POSTGRES_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
+    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
