@@ -27,7 +27,10 @@ export default async function ApplyPage({
   }
 
   return (
-    <LargeFormWrapper header={post?.title} description="You got this!">
+    <LargeFormWrapper
+      header={`Application for ${post?.title}, ${post.company}`}
+      description="You got this!"
+    >
       <ApplicationForm postId={postId} />
     </LargeFormWrapper>
   );

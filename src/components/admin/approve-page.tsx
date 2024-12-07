@@ -18,14 +18,19 @@ import {
 import { getUnreviewedJobPosts, reviewJobPosting } from "@/actions/actions";
 import LoadingSpinner from "@/components/loading-spinner";
 import BodyMessage from "../body-message";
-import Link from "next/link";
-import { Link2 } from "lucide-react";
+import { Expand } from "lucide-react";
 import { toast } from "sonner";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DetailedPostPopup from "../jobs/detailed-post-popup";
 
 const queryClient = new QueryClient();
 
-function Block() {
+function Block({
+  setExpandedPost,
+}: {
+  setExpandedPost: (postId: number | null) => void;
+}) {
   const queryClient = useQueryClient();
   const [isPending, startTransition] = useTransition();
 
@@ -74,8 +79,8 @@ function Block() {
         <TableRow>
           <TableHead>Title</TableHead>
           <TableHead>Company</TableHead>
-          <TableHead>Link</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead>Expand</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -98,9 +103,15 @@ function Block() {
               </div>
             </TableCell>
             <TableCell>
-              <Link href={`/job/${job.postId}`}>
-                <Link2 className="inline-block h-4 w-4" />
-              </Link>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  setExpandedPost(job.postId);
+                }}
+              >
+                <Expand />
+              </Button>
             </TableCell>
             <TableCell>
               <div className="space-x-2">
@@ -129,9 +140,25 @@ function Block() {
 }
 
 export function PendingJobPostingsBlock() {
+  const [expandedPost, setExpandedPost] = useState<number | null>(null);
+  const closeDialog = () => setExpandedPost(null);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <Block />
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Pending Job Postings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Block setExpandedPost={setExpandedPost} />
+          </CardContent>
+        </Card>
+      </QueryClientProvider>
+      <DetailedPostPopup
+        closeDialog={closeDialog}
+        expandedPost={expandedPost}
+      />
+    </>
   );
 }

@@ -184,7 +184,7 @@ export default function ApplicationForm({ postId }: { postId: number }) {
                   />
                 ) : (
                   <a
-                    href={`https://utfs.io/f/${field.value}`}
+                    href={`/api/download/${field.value}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex h-9 w-full items-center justify-between rounded-md border border-gray-300 bg-gray-100 px-4 text-sm font-medium text-gray-700 shadow-sm transition duration-150 hover:bg-gray-200 hover:text-gray-900"

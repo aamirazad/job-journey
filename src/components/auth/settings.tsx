@@ -27,6 +27,7 @@ import { setUserSettings } from "@/actions/actions";
 import { toast } from "sonner";
 import { FormInfo } from "@/components/auth/form-info";
 import { capitalizeFirstLetter } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 export const SettingsSchema = z.object({
   name: z.string().min(2, {
@@ -49,6 +50,7 @@ export default function Settings({ session }: { session: Session }) {
       role: session.user.role === "ADMIN" ? "STUDENT" : session.user.role,
     },
   });
+  const router = useRouter();
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SettingsSchema>) {
@@ -57,6 +59,7 @@ export default function Settings({ session }: { session: Session }) {
     await setUserSettings(values).then((data) => {
       if (data.success) {
         toast.success("Settings updated successfully!");
+        router.refresh();
       } else {
         toast.error("Failed to update settings");
       }

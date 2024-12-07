@@ -15,14 +15,7 @@ export default function Dashboard() {
             <UserPromotionBlock />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Pending Job Postings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PendingJobPostingsBlock />
-          </CardContent>
-        </Card>
+        <PendingJobPostingsBlock />
       </div>
     </div>
   );

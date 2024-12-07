@@ -136,7 +136,10 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
               ) : null}
             </div>
             <div className="mt-4">
-              <Badge variant="secondary" className="line-clamp-1">
+              <Badge
+                variant="secondary"
+                className="pointer-events-none line-clamp-1 inline-block"
+              >
                 {job.experienceLevel}
               </Badge>
             </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CalendarDays,
   Briefcase,
@@ -13,9 +15,31 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { type JobPost } from "@/server/db/schema";
+import {
+  useQuery,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { getJobPost } from "@/actions/actions";
+import BodyMessage from "../body-message";
+import LoadingSpinner from "../loading-spinner";
+import Link from "next/link";
+import { buttonVariants } from "../ui/button";
 
-export function DetailedJobPost({ post }: { post: JobPost }) {
+const queryClient = new QueryClient();
+
+function DetailedJobPost({ postId }: { postId: number }) {
+  const { data: post, isLoading } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: async () => {
+      return await getJobPost(postId);
+    },
+  });
+
+  if (isLoading) return <LoadingSpinner />;
+
+  if (!post) return <BodyMessage>Post not found</BodyMessage>;
+
   return (
     <Card className="mx-auto w-full max-w-3xl">
       <CardHeader>
@@ -29,12 +53,7 @@ export function DetailedJobPost({ post }: { post: JobPost }) {
             </p>
           </div>
           {post.status === "UNREVIEWED" && (
-            <Badge
-              className="pointer-events-none flex-none whitespace-nowrap"
-              variant="warning"
-            >
-              Unreviewed
-            </Badge>
+            <Badge className="flex-none whitespace-nowrap">Unreviewed</Badge>
           )}
         </div>
       </CardHeader>
@@ -124,7 +143,21 @@ export function DetailedJobPost({ post }: { post: JobPost }) {
             Posted on {post.dateCreated.toLocaleDateString()}
           </div>
         </div>
+        <Link
+          className={buttonVariants({ variant: "outline" })}
+          href={`/apply/${post.postId}`}
+        >
+          Apply
+        </Link>
       </CardContent>
     </Card>
+  );
+}
+
+export default function Wrapper({ postId }: { postId: number }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <DetailedJobPost postId={postId} />
+    </QueryClientProvider>
   );
 }

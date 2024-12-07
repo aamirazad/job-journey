@@ -163,12 +163,16 @@ export const applications = createTable("applications", {
   dateApplied: timestamp("date_applied", {
     mode: "date",
     withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 
   dateUpdated: timestamp("date_updated", {
     mode: "date",
     withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 
   // Additional application metadata
   isWithdrawn: boolean("is_withdrawn").default(false).notNull(),

@@ -214,6 +214,24 @@ export async function getUnreviewedJobPosts() {
   return new Error("Failed to get unreviewed job postings");
 }
 
+export async function getMyJobPosts(userId: string) {
+  const session = await auth();
+  if (session?.user.role !== "EMPLOYER") {
+    return null;
+  }
+
+  try {
+    const result = await db.query.posts.findMany({
+      orderBy: [desc(posts.dateCreated)],
+      where: eq(posts.ownerId, userId),
+    });
+    return result;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export async function reviewJobPosting(
   id: number,
   status: "UNREVIEWED" | "ACCEPTED" | "DELETED",
@@ -244,5 +262,53 @@ export async function getJobPost(id: number) {
   } catch (error) {
     console.error(error);
     return null;
+  }
+}
+
+export async function getApplicationsForPost(postId: number) {
+  try {
+    const postApplications = await db.query.applications.findMany({
+      where: eq(applications.postId, postId),
+      orderBy: desc(applications.dateApplied),
+    });
+    return postApplications;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getApplication(id: number | null) {
+  if (!id) {
+    return null;
+  }
+  try {
+    const application = await db.query.applications.findFirst({
+      where: eq(applications.id, id),
+    });
+    return application;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function reviewApplication(
+  id: number,
+  status: "APPLIED" | "ACCEPTED" | "REJECTED",
+) {
+  const session = await auth();
+  if (!session) {
+    return { error: "Unauthorized" };
+  }
+  try {
+    await db
+      .update(applications)
+      .set({ status: status })
+      .where(eq(applications.id, id));
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to review application" };
   }
 }

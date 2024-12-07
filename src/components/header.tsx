@@ -113,12 +113,15 @@ export default async function Header() {
           <Pencil className="h-4 w-4" />
           Post a Job
         </Link>
-        {session?.user.role === "ADMIN" && (
-          <Link className={buttonVariants({ variant: "link" })} href="/admin">
+        {session?.user.role === "EMPLOYER" || session?.user.role == "ADMIN" ? (
+          <Link
+            className={buttonVariants({ variant: "link" })}
+            href="/dashboard"
+          >
             <LayoutDashboard />
-            Admin
+            Dashboard
           </Link>
-        )}
+        ) : null}
         {session ? (
           <UserDialog />
         ) : (
@@ -154,12 +157,13 @@ export default async function Header() {
               <Pencil className="h-4 w-4" />
               <Link href="/post">Post a Job</Link>
             </DropdownMenuItem>
-            {session?.user.role === "ADMIN" && (
+            {session?.user.role === "EMPLOYER" ||
+            session?.user.role == "ADMIN" ? (
               <DropdownMenuItem>
                 <LayoutDashboard />
-                <Link href="/admin">Admin</Link>
+                <Link href="/dashboard">Dashboard</Link>
               </DropdownMenuItem>
-            )}
+            ) : null}
           </DropdownMenuContent>
         </DropdownMenu>
         {session ? (
