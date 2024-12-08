@@ -65,18 +65,29 @@ function Block() {
   return (
     <form action={handlePromoteToAdmin} className="space-y-4">
       <Select value={selectedUser ?? ""} onValueChange={setSelectedUser}>
-        <SelectTrigger>
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a user" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-h-60 overflow-y-auto">
           {users.data.map((user) => (
-            <SelectItem key={user.id} value={user.id.toString()}>
-              {user.name} ({user.email})
+            <SelectItem
+              key={user.id}
+              value={user.id.toString()}
+              className="text-sm sm:text-base"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center">
+                <span className="mr-2 max-w-[150px] truncate sm:max-w-[200px]">
+                  {user.name}
+                </span>
+                <span className="text-xs text-muted-foreground sm:text-sm">
+                  ({user.email})
+                </span>
+              </div>
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      <Button type="submit" disabled={!selectedUser}>
+      <Button type="submit" disabled={!selectedUser} className="w-full">
         Promote to Admin
       </Button>
     </form>

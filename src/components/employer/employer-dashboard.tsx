@@ -18,7 +18,6 @@ import {
   Download,
   Edit,
   Ellipsis,
-  Expand,
   Eye,
   Plus,
   Trash2,
@@ -34,6 +33,7 @@ import {
   getApplicationsForPost,
   getMyJobPosts,
   reviewApplication,
+  reviewJobPosting,
 } from "@/actions/actions";
 import BodyMessage from "@/components/body-message";
 import { type Session } from "next-auth";
@@ -74,20 +74,33 @@ function JobPosts({
   selectedPost,
   setSelectedPost,
   setExpandedPost,
-  onDeletePost,
 }: {
   session: Session;
   selectedPost: number;
   setSelectedPost: (postId: number) => void;
   setExpandedPost: (postId: number | null) => void;
-  onDeletePost: (postId: number) => void;
 }) {
+  const queryClient = useQueryClient();
   const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
       return await getMyJobPosts(session.user.id);
     },
   });
+
+  const handleDeletePost = async (id: number) => {
+    toast.promise(
+      async () => {
+        await reviewJobPosting(id, "DELETED");
+        await queryClient.invalidateQueries({ queryKey: ["posts"] });
+      },
+      {
+        loading: "Loading...",
+        error: "Failed to delete job posting",
+        success: "Successfully deleted job posting",
+      },
+    );
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -98,22 +111,20 @@ function JobPosts({
   }
 
   return (
-    <Table className="">
+    <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="">Title</TableHead>
-          <TableHead className="">Date Posted</TableHead>
-          <TableHead className="">Status</TableHead>
-          <TableHead className="">Actions</TableHead>
+          <TableHead>Title</TableHead>
+          <TableHead>Date Posted</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {posts.map((post) => (
           <TableRow
             key={post.postId}
-            className={`hover:bg-gray-100 ${
-              selectedPost === post.postId ? "font-bold" : ""
-            }`}
+            className={selectedPost === post.postId ? "bg-gray-100" : ""}
           >
             <TableCell className="min-w-64 max-w-0">
               <div className="truncate" title={post.title}>
@@ -134,7 +145,7 @@ function JobPosts({
                 {post.status}
               </Badge>
             </TableCell>
-            <TableCell>
+            <TableCell className="flex gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -150,8 +161,8 @@ function JobPosts({
                     onClick={() => setExpandedPost(post.postId)}
                     className="flex items-center gap-2"
                   >
-                    <Expand className="h-4 w-4" />
-                    <span>Expand Post</span>
+                    <Eye className="h-4 w-4" />
+                    <span>View Post Details</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link
@@ -182,7 +193,7 @@ function JobPosts({
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
-                            onClick={() => onDeletePost(post.postId)}
+                            onClick={() => handleDeletePost(post.postId)}
                           >
                             Delete
                           </AlertDialogAction>
@@ -365,7 +376,7 @@ function ApplicationList({
   );
 }
 
-function EmployerDashboard({ session }: { session: Session }) {
+export default function EmployerDashboard({ session }: { session: Session }) {
   const [selectedPost, setSelectedPost] = useState(0);
   const [expandedPost, setExpandedPost] = useState<number | null>(null);
   const [expandedApplication, setExpandedApplication] = useState<number | null>(
@@ -375,79 +386,82 @@ function EmployerDashboard({ session }: { session: Session }) {
     setExpandedPost(null);
     setExpandedApplication(null);
   };
-  const queryClient = useQueryClient();
 
-  const handleDeletePost = async (postId: number) => {
-    // TODO: Implement delete post functionality
-    console.log(`Deleting post ${postId}`);
-    // After successful deletion, refetch the posts
-    await queryClient.invalidateQueries({ queryKey: ["posts"] });
-  };
-
-  return (
-    <>
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Job Postings</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <JobPosts
-              session={session}
-              selectedPost={selectedPost}
-              setSelectedPost={setSelectedPost}
-              setExpandedPost={setExpandedPost}
-              onDeletePost={handleDeletePost}
-            />
-          </CardContent>
-        </Card>
-
-        {selectedPost ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>Applications</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ApplicationList
-                selectedPost={selectedPost}
-                setExpandedApplication={setExpandedApplication}
-              />
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>Applications</CardTitle>
-            </CardHeader>
-            <BodyMessage>Select a job posting to view applications</BodyMessage>
-          </Card>
-        )}
-      </div>
-      <DetailedPostPopup
-        closeDialog={closeDialog}
-        expandedPost={expandedPost}
-      />
-      <DetailedApplicationPopup
-        closeDialog={closeDialog}
-        expandedApplication={expandedApplication}
-      />
-    </>
-  );
-}
-
-export default function Wrapper({ session }: { session: Session }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="container mx-auto py-10">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Employer Dashboard</h1>
-          <Button asChild>
-            <Link href="/post">
-              <Plus /> Post New Job
+      {/* Added more responsive padding and max-width */}
+      <div className="container mx-auto px-4 py-6 md:py-10">
+        {/* Responsive header layout */}
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <h1 className="text-2xl font-bold sm:text-3xl">Employer Dashboard</h1>
+          <Button
+            asChild
+            className="w-full sm:w-auto" // Full width on mobile, auto on larger screens
+          >
+            <Link
+              href="/post"
+              className="flex items-center justify-center gap-2"
+            >
+              <Plus className="h-5 w-5" /> Post New Job
             </Link>
           </Button>
         </div>
-        <EmployerDashboard session={session} />
+
+        {/* Responsive grid with gap and padding */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle className="text-xl sm:text-2xl">
+                Your Job Postings
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-6">
+              <JobPosts
+                session={session}
+                selectedPost={selectedPost}
+                setSelectedPost={setSelectedPost}
+                setExpandedPost={setExpandedPost}
+              />
+            </CardContent>
+          </Card>
+
+          {selectedPost ? (
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle className="text-xl sm:text-2xl">
+                  Applications
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 sm:p-6">
+                <ApplicationList
+                  selectedPost={selectedPost}
+                  setExpandedApplication={setExpandedApplication}
+                />
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle className="text-xl sm:text-2xl">
+                  Applications
+                </CardTitle>
+              </CardHeader>
+              <BodyMessage>
+                Select a job posting to view applications
+              </BodyMessage>
+            </Card>
+          )}
+        </div>
+
+        {/* Modals remain the same */}
+        <DetailedPostPopup
+          closeDialog={closeDialog}
+          expandedPost={expandedPost}
+        />
+        <DetailedApplicationPopup
+          closeDialog={closeDialog}
+          expandedApplication={expandedApplication}
+        />
       </div>
     </QueryClientProvider>
   );
