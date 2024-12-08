@@ -6,7 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-
+import NextTopLoader from "nextjs-toploader";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
@@ -31,6 +31,7 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
+        <NextTopLoader color="#f97316" />
         <Header />
         <div className="absolute left-0 top-0 -z-10 flex h-full w-full flex-col">
           <div className="w-full flex-1 bg-gradient-to-b from-[#FF499E]/10 to-[#D264B6]/10" />

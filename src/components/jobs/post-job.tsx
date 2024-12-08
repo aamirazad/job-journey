@@ -1,6 +1,5 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,35 +20,41 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { jobPostSchema } from "@/schemas";
-import type * as z from "zod";
 import BodyMessage from "@/components/body-message";
 import { toast } from "sonner";
 import { createJobPost } from "@/actions/actions";
 import type { Session } from "next-auth";
 import { useState } from "react";
+import { type JobPost } from "@/server/db/schema";
+import { useRouter } from "next/navigation";
+import { jobPostSchema } from "@/schemas";
+import type * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function PostForm({
   session,
   refreshPage,
+  defaultPostDetails,
 }: {
   session: Session;
   refreshPage: () => void;
+  defaultPostDetails?: JobPost;
 }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof jobPostSchema>>({
     resolver: zodResolver(jobPostSchema),
     defaultValues: {
-      title: "",
-      company: "",
-      location: "",
-      employmentType: "Full-time",
-      workplaceType: "On-site",
-      experienceLevel: "Mid",
-      pay: "",
-      description: "",
-      requirements: "",
-      responsibilities: "",
-      benefits: "",
+      title: defaultPostDetails?.title ?? "",
+      company: defaultPostDetails?.company ?? "",
+      location: defaultPostDetails?.location ?? "",
+      employmentType: defaultPostDetails?.employmentType ?? "Full-time",
+      workplaceType: defaultPostDetails?.workplaceType ?? "On-site",
+      experienceLevel: defaultPostDetails?.experienceLevel ?? "Mid",
+      pay: defaultPostDetails?.pay ?? "",
+      description: defaultPostDetails?.description ?? "",
+      requirements: defaultPostDetails?.requirements ?? "",
+      responsibilities: defaultPostDetails?.responsibilities ?? "",
+      benefits: defaultPostDetails?.benefits ?? "",
     },
   });
 
@@ -64,7 +69,7 @@ function PostForm({
       if (!session || !["EMPLOYER", "ADMIN"].includes(session.user.role)) {
         return { error: "Not authorized" };
       }
-      const result = await createJobPost(values);
+      const result = await createJobPost(values, defaultPostDetails?.postId);
 
       if ("error" in result) {
         toast.error(result.error);
@@ -72,6 +77,10 @@ function PostForm({
       }
 
       toast.success("Job post created successfully!");
+
+      if (defaultPostDetails) {
+        router.push("/post");
+      }
       refreshPage();
     } catch {
       toast("Error posting job. Please try again.");
@@ -281,14 +290,24 @@ function PostForm({
   );
 }
 
-export function PostJob({ session }: { session: Session }) {
+export function PostJob({
+  session,
+  defaultPostDetails,
+}: {
+  session: Session;
+  defaultPostDetails?: JobPost;
+}) {
   const [key, setKey] = useState(0);
   const refreshPage = () => {
     setKey((prevKey) => prevKey + 1);
   };
   return (
     <div key={key}>
-      <PostForm session={session} refreshPage={refreshPage} />
+      <PostForm
+        session={session}
+        refreshPage={refreshPage}
+        defaultPostDetails={defaultPostDetails}
+      />
     </div>
   );
 }

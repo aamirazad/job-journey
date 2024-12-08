@@ -123,7 +123,13 @@ function JobPosts({
             <TableCell>{post.dateCreated.toLocaleDateString()}</TableCell>
             <TableCell>
               <Badge
-                variant={post.status === "ACCEPTED" ? "default" : "secondary"}
+                variant={
+                  post.status === "ACCEPTED"
+                    ? "default"
+                    : post.status === "DELETED"
+                      ? "destructive"
+                      : "outline"
+                }
               >
                 {post.status}
               </Badge>
@@ -306,7 +312,7 @@ function ApplicationList({
                     className="flex items-center gap-2"
                   >
                     <Eye className="h-4 w-4" />
-                    <span>View Application</span>
+                    <span>View Application Details</span>
                   </DropdownMenuItem>
                   {application.resumeId && (
                     <DropdownMenuItem

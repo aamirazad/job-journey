@@ -22,7 +22,7 @@ export default async function ApplyPage({
 
   const postId = (await params).postId;
   const post = await getPostNameFromId(postId);
-  if (!post) {
+  if (post?.status !== "ACCEPTED") {
     return <BodyMessage>Post not found</BodyMessage>;
   }
 

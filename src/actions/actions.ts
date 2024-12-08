@@ -102,7 +102,10 @@ export async function handleJobApplication(
   return { success: true };
 }
 
-export async function createJobPost(values: z.infer<typeof jobPostSchema>) {
+export async function createJobPost(
+  values: z.infer<typeof jobPostSchema>,
+  replace: number | undefined,
+) {
   const session = await auth();
 
   if (!session || !["EMPLOYER", "ADMIN"].includes(session.user.role)) {
@@ -113,8 +116,10 @@ export async function createJobPost(values: z.infer<typeof jobPostSchema>) {
     const [result] = await db
       .insert(posts)
       .values({
-        ownerId: session.user.id,
         ...values,
+        ownerId: session.user.id,
+        status: "UNREVIEWED",
+        replace: replace,
       })
       .returning({ postId: posts.postId });
 
@@ -237,10 +242,27 @@ export async function reviewJobPosting(
   status: "UNREVIEWED" | "ACCEPTED" | "DELETED",
 ) {
   const session = await auth();
-  if (!session) {
+  if (session?.user.role !== "ADMIN") {
     return { error: "Unauthorized" };
   }
   try {
+    const prev = await db.query.posts.findFirst({
+      where: eq(posts.postId, id),
+      columns: { replace: true, status: true },
+    });
+    if (prev?.replace) {
+      if (status == "ACCEPTED") {
+        await db
+          .update(posts)
+          .set({ status: "DELETED" })
+          .where(eq(posts.postId, prev.replace));
+      } else if (status == "UNREVIEWED") {
+        await db
+          .update(posts)
+          .set({ status: prev.status })
+          .where(eq(posts.postId, prev.replace));
+      }
+    }
     await db.update(posts).set({ status: status }).where(eq(posts.postId, id));
     return { success: true };
   } catch (error) {

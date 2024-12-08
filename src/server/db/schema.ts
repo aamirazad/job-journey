@@ -123,6 +123,8 @@ export const posts = createTable("posts", {
   requirements: text("requirements"),
   responsibilities: text("responsibilities"),
   benefits: text("benefits"),
+
+  replace: integer("replace"),
 });
 
 export type JobPost = typeof posts.$inferSelect;

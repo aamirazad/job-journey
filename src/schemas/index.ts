@@ -54,9 +54,15 @@ export const jobPostSchema = z.object({
     .min(2, { message: "Text must be at least 2 characters." })
     .max(50, { message: "Text must be less than 50 characters" }),
 
-  employmentType: z.enum(employmentTypeValues),
-  workplaceType: z.enum(workplaceTypeValues),
-  experienceLevel: z.enum(experienceLevelValues),
+  employmentType: z
+    .string({ message: "Input a string" })
+    .min(1, { message: "Select one" }),
+  workplaceType: z
+    .string({ message: "Input a string" })
+    .min(1, { message: "Select one" }),
+  experienceLevel: z
+    .string({ message: "Input a string" })
+    .min(1, { message: "Select one" }),
 
   pay: z
     .string({ message: "Input a string" })
