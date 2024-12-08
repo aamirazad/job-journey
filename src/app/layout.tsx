@@ -31,7 +31,7 @@ export default function RootLayout({
            */
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
-        <NextTopLoader color="#f97316" />
+        <NextTopLoader color="#f97316" showSpinner={false} />
         <Header />
         <div className="absolute left-0 top-0 -z-10 flex h-full w-full flex-col">
           <div className="w-full flex-1 bg-gradient-to-b from-[#FF499E]/10 to-[#D264B6]/10" />
