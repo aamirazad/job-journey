@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="border-t py-6 pt-12">
@@ -6,18 +8,24 @@ export default function Footer() {
           © 2024 Student Job Portal. All rights reserved.
         </p>
         <nav className="mt-4 flex gap-4 sm:mt-0 sm:gap-6">
-          <a
+          <Link
             href="/terms"
             className="text-xs underline-offset-4 hover:underline"
           >
             Terms of Service
-          </a>
-          <a
+          </Link>
+          <Link
             href="/privacy"
             className="text-xs underline-offset-4 hover:underline"
           >
             Privacy Policy
-          </a>
+          </Link>
+          <Link
+            href="/sources"
+            className="text-xs underline-offset-4 hover:underline"
+          >
+            Sources
+          </Link>
         </nav>
       </div>
     </footer>

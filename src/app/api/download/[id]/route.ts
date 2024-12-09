@@ -1,4 +1,7 @@
 import { auth } from "@/server/auth";
+import { db } from "@/server/db";
+import { applications, posts } from "@/server/db/schema";
+import { and, eq, or, sql } from "drizzle-orm";
 
 export async function GET(
   request: Request,
@@ -9,16 +12,47 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  if (
-    !session ||
-    !(
-      session.user.role.includes("ADMIN") ||
-      session.user.role.includes("EMPLOYER")
-    )
-  ) {
+  if (!session) {
     return new Response("Unauthorized", { status: 401 });
   }
   const slug = (await params).id;
+
+  if (session.user.role == "STUDENT") {
+    const hasAccess = await db
+      .select({ exists: sql<boolean>`COUNT(*) > 0` })
+      .from(applications)
+      .where(
+        and(
+          eq(applications.userId, session.user.id),
+          or(
+            eq(applications.resumeId, slug),
+            eq(applications.coverLetterId, slug),
+          ),
+        ),
+      );
+    if (!hasAccess) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+  } else if (session.user.role == "EMPLOYER") {
+    const hasAccess = await db
+      .select({ exists: sql<boolean>`COUNT(*) > 0` })
+      .from(applications)
+      .innerJoin(posts, eq(applications.postId, posts.postId))
+      .where(
+        and(
+          eq(posts.ownerId, session.user.id),
+          or(
+            eq(applications.resumeId, slug),
+            eq(applications.coverLetterId, slug),
+          ),
+        ),
+      );
+    if (!hasAccess) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+  } else {
+    return new Response("Unauthorized", { status: 401 });
+  }
 
   const pdfResponse = await fetch(`https://utfs.io/a/i1cb8cwdxj/${slug}`);
 
