@@ -4,20 +4,28 @@ export const USER_ROLES = ["ADMIN", "STUDENT", "EMPLOYER"] as const;
 export const USER_ROLES_WITHOUT_ADMIN = ["STUDENT", "EMPLOYER"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-export const SignUpSchema = z.object({
-  name: z.string({ message: "Input a string" }).min(1, {
-    message: "Name is required",
-  }),
-  role: z.enum(USER_ROLES_WITHOUT_ADMIN, {
-    message: "Role is required",
-  }),
-  email: z.string({ message: "Input a string" }).email({
-    message: "Email is required",
-  }),
-  password: z.string({ message: "Input a string" }).min(8, {
-    message: "Must be at least 8 characters",
-  }),
-});
+export const SignUpSchema = z
+  .object({
+    name: z.string({ message: "Input a string" }).min(1, {
+      message: "Name is required",
+    }),
+    role: z.enum(USER_ROLES_WITHOUT_ADMIN, {
+      message: "Role is required",
+    }),
+    email: z.string({ message: "Input a string" }).email({
+      message: "Email is required",
+    }),
+    password: z.string({ message: "Input a string" }).min(8, {
+      message: "Must be at least 8 characters",
+    }),
+    confirm: z
+      .string({ message: "Input a string" })
+      .min(1, { message: "Please retype your password to confirm" }),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords don't match",
+    path: ["confirm"],
+  });
 
 export const LoginSchema = z.object({
   email: z.string({ message: "Input a string" }).email({

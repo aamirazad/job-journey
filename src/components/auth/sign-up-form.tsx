@@ -28,11 +28,13 @@ import {
 } from "@/components/ui/select";
 import { USER_ROLES_WITHOUT_ADMIN } from "@/schemas";
 import { redirect } from "next/navigation";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setsuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [isHidden, setIsHidden] = useState(false);
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -137,12 +139,46 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="********"
-                      type="password"
-                      disabled={isPending}
-                    />
+                    <div className="flex flex-shrink items-center space-x-2">
+                      <Input type={isHidden ? "text" : "password"} {...field} />
+                      {isHidden ? (
+                        <EyeIcon
+                          onClick={() => setIsHidden(false)}
+                          aria-description="Show password"
+                        />
+                      ) : (
+                        <EyeOffIcon
+                          onClick={() => setIsHidden(true)}
+                          aria-description="Hide password"
+                        />
+                      )}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirm"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl>
+                    <div className="flex flex-shrink items-center space-x-2">
+                      <Input type={isHidden ? "text" : "password"} {...field} />
+                      {isHidden ? (
+                        <EyeIcon
+                          onClick={() => setIsHidden(false)}
+                          aria-description="Show password"
+                        />
+                      ) : (
+                        <EyeOffIcon
+                          onClick={() => setIsHidden(true)}
+                          aria-description="Hide password"
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
