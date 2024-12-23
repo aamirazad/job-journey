@@ -41,6 +41,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import fuzzysort from "fuzzysort";
 
 const queryClient = new QueryClient();
 
@@ -60,30 +61,37 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
   // Local state to store filtered job posts
   const [posts, setPosts] = useState<typeof jobPosts>([]);
 
-  // Filter job posts whenever search, employmentTypes, or jobPosts change
   useEffect(() => {
     const filterJobPosts = () => {
       if (!jobPosts || jobPosts instanceof Error) return jobPosts;
 
-      return jobPosts.filter((job) => {
-        // Filter by search term (case-insensitive match for the title)
-        const matchesSearch = search
-          ? job.title.toLowerCase().includes(search.toLowerCase())
-          : true;
+      // Step 1: Use fuzzysort to rank jobs by relevance
+      let filteredJobs = jobPosts;
 
-        // Filter by employmentTypes if provided
-        const matchesEmploymentType =
-          employmentTypes && employmentTypes.length > 0
-            ? employmentTypes.includes(job.employmentType as EmploymentType)
-            : true;
+      if (search) {
+        const fuzzysortResults = fuzzysort.go(search, jobPosts, {
+          key: "title",
+          threshold: -10000,
+        });
 
-        // Return true only if both conditions match
-        return matchesSearch && matchesEmploymentType;
-      });
+        // Map fuzzysort results back to job objects
+        filteredJobs = fuzzysortResults.map((result) => result.obj);
+      }
+
+      // Step 2: Filter by employment type
+      if (employmentTypes && employmentTypes.length > 0) {
+        filteredJobs = filteredJobs.filter((job) =>
+          employmentTypes.includes(job.employmentType as EmploymentType),
+        );
+      }
+
+      return filteredJobs;
     };
 
-    setPosts(filterJobPosts()); // Apply filter after every change
-  }, [search, employmentTypes, jobPosts]); // Re-run the effect when any of these values change
+    // Example: Call filterJobPosts and set it to state
+    const filteredPosts = filterJobPosts();
+    setPosts(filteredPosts);
+  }, [jobPosts, search, employmentTypes]);
 
   // Loading state while data is being fetched
   if (isLoading) {
@@ -270,8 +278,8 @@ export default function JobListings({ session }: { session: Session | null }) {
                 placeholder="Search"
                 onChange={(e) => setSearch(e.target.value)}
               />
+              <Separator className="my-4" />
               <div>
-                <Separator className="my-4" />
                 <div className="flex flex-col gap-4">
                   {employmentTypeValues.map((type) => (
                     <div key={type} className="flex items-center space-x-2">
