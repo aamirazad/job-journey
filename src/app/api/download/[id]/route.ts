@@ -1,71 +1,45 @@
 import { auth } from "@/server/auth";
-import { db } from "@/server/db";
-import { applications, posts } from "@/server/db/schema";
-import { and, eq, or, sql } from "drizzle-orm";
+import { verifyFileAccess } from "@/actions/actions";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const session = await auth();
-  if (!(await params)) {
-    return new Response("Not found", { status: 404 });
-  }
+  try {
+    const session = await auth();
 
-  if (!session) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-  const slug = (await params).id;
+    // Check if user is authenticated
+    if (!session || !session.user) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
-  if (session.user.role == "STUDENT") {
-    const hasAccess = await db
-      .select({ exists: sql<boolean>`COUNT(*) > 0` })
-      .from(applications)
-      .where(
-        and(
-          eq(applications.userId, session.user.id),
-          or(
-            eq(applications.resumeId, slug),
-            eq(applications.coverLetterId, slug),
-          ),
-        ),
-      );
+    const fileId = (await params).id;
+    const userId = session.user.id;
+    const userRole = session.user.role;
+
+    // Verify access permissions
+    const hasAccess = await verifyFileAccess(fileId, userId, userRole);
+
     if (!hasAccess) {
       return new Response("Unauthorized", { status: 401 });
     }
-  } else if (session.user.role == "EMPLOYER") {
-    const hasAccess = await db
-      .select({ exists: sql<boolean>`COUNT(*) > 0` })
-      .from(applications)
-      .innerJoin(posts, eq(applications.postId, posts.postId))
-      .where(
-        and(
-          eq(posts.ownerId, session.user.id),
-          or(
-            eq(applications.resumeId, slug),
-            eq(applications.coverLetterId, slug),
-          ),
-        ),
-      );
-    if (!hasAccess) {
-      return new Response("Unauthorized", { status: 401 });
+
+    const pdfResponse = await fetch(`https://utfs.io/a/i1cb8cwdxj/${fileId}`);
+
+    if (!pdfResponse.ok) {
+      return new Response("Failed to fetch PDF", { status: 500 });
     }
-  } else {
-    return new Response("Unauthorized", { status: 401 });
+
+    const pdfBuffer = await pdfResponse.arrayBuffer();
+    return new Response(pdfBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${fileId}.pdf"`,
+      },
+    });
+  } catch (error) {
+    console.error("Error in file download:", error);
+    return new Response("Internal Server Error", { status: 500 });
   }
-
-  const pdfResponse = await fetch(`https://utfs.io/a/i1cb8cwdxj/${slug}`);
-
-  if (!pdfResponse.ok) {
-    return new Response("Failed to fetch PDF", { status: 500 });
-  }
-
-  const pdfBuffer = await pdfResponse.arrayBuffer();
-  return new Response(pdfBuffer, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="${slug}.pdf"`,
-    },
-  });
 }

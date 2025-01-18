@@ -5,7 +5,7 @@ import { type jobPostSchema, type ApplicationFormSchema } from "@/schemas";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { applications, posts, users } from "@/server/db/schema";
-import { desc, eq, not } from "drizzle-orm";
+import { desc, eq, not, or } from "drizzle-orm";
 import { type z } from "zod";
 import { sendNewApplicationEmail } from "./resend";
 
@@ -329,4 +329,44 @@ export async function reviewApplication(
     console.error(error);
     return { error: "Failed to review application" };
   }
+}
+
+export async function verifyFileAccess(
+  fileId: string,
+  userId: string,
+  userRole: string,
+): Promise<boolean> {
+  // Get application info
+  const application = await db.query.applications.findFirst({
+    where: or(
+      eq(applications.resumeId, fileId),
+      eq(applications.coverLetterId, fileId),
+    ),
+    with: {
+      post: {
+        with: {
+          owner: true,
+        },
+      },
+      owner: true,
+    },
+  });
+
+  if (!application) {
+    return false;
+  }
+
+  // Case 1: If the user is a student, they can only access their own files
+  if (userRole === "STUDENT") {
+    return application.userId === userId;
+  }
+
+  // Case 2: If the user is an employer, they can only access files from applications
+  // to their own job posts
+  if (userRole === "EMPLOYER") {
+    return application.post.ownerId === userId;
+  }
+
+  // Default: deny access
+  return false;
 }
