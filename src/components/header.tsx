@@ -81,7 +81,7 @@ async function UserDialog() {
             <AlertDialogAction
               onClick={async () => {
                 "use server";
-                await signOut();
+                await signOut({ redirectTo: "/?loginState=signedOut" });
               }}
             >
               Continue

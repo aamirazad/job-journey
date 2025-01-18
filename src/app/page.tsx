@@ -9,8 +9,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { auth } from "@/server/auth";
+import { PostHogId } from "@/components/id-users";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
   const features = [
     {
       icon: <GraduationCap className="h-8 w-8 text-blue-600" />,
@@ -33,6 +37,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
+      {session ? (
+        <Suspense>
+          <PostHogId session={session} />
+        </Suspense>
+      ) : null}
       <section className="relative overflow-hidden pb-12 pt-16 md:pt-24 lg:pt-32">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid items-center gap-8 md:grid-cols-2">
