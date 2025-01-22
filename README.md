@@ -10,5 +10,5 @@ See our video presentation of this project at
 
 [![youtube thumbnail](https://img.youtube.com/vi/u4CRqdetzbg/0.jpg)](https://www.youtube.com/watch?v=u4CRqdetzbg)
 
-![Job search](https://cloud-maxiz33sv-hack-club-bot.vercel.app/0image.png)
+![Job search](https://cloud-32tukvbvs-hack-club-bot.vercel.app/0image.png)
 All the job postings are demo/placeholder postings as this website is mainly a project to teach me how to build a website and not to be used.
