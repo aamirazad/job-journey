@@ -41,6 +41,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { JobRecommendation } from "./job-recommendation";
 
 const queryClient = new QueryClient();
 
@@ -104,74 +105,77 @@ function Listings({ search, employmentTypes, session }: ListingsProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {posts.map((job) => (
-        <Card key={job.postId} className="flex flex-col bg-white/50">
-          <CardHeader>
-            <CardTitle className="overflow-hidden truncate text-ellipsis text-xl font-bold sm:text-2xl">
-              {job.title}
-            </CardTitle>
-            <p className="overflow-hidden truncate text-ellipsis text-base font-semibold text-muted-foreground sm:text-lg">
-              {job.company}
-            </p>
-          </CardHeader>
-          <CardContent className="flex-grow">
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <MapPin className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
-                <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
-                  {job.location}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Briefcase className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
-                <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
-                  {job.employmentType}
-                </span>
-              </div>
-              <div className="flex items-center">
-                <Clock className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
-                <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
-                  {job.workplaceType}
-                </span>
-              </div>
-              {job.pay && job.pay ? (
+    <div className="grid w-full gap-4">
+      <JobRecommendation jobPosts={posts} />
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.map((job) => (
+          <Card key={job.postId} className="flex flex-col bg-white/50">
+            <CardHeader>
+              <CardTitle className="overflow-hidden truncate text-ellipsis text-xl font-bold sm:text-2xl">
+                {job.title}
+              </CardTitle>
+              <p className="overflow-hidden truncate text-ellipsis text-base font-semibold text-muted-foreground sm:text-lg">
+                {job.company}
+              </p>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <div className="space-y-2">
                 <div className="flex items-center">
-                  <DollarSign className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                  <MapPin className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
                   <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
-                    {job.pay.toLocaleString()}
+                    {job.location}
                   </span>
                 </div>
+                <div className="flex items-center">
+                  <Briefcase className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                  <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
+                    {job.employmentType}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                  <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
+                    {job.workplaceType}
+                  </span>
+                </div>
+                {job.pay && job.pay ? (
+                  <div className="flex items-center">
+                    <DollarSign className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+                    <span className="overflow-hidden truncate text-ellipsis text-sm sm:text-base">
+                      {job.pay.toLocaleString()}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+              <div className="mt-4">
+                <Badge
+                  variant="secondary"
+                  className="pointer-events-none line-clamp-1 inline-block text-xs sm:text-sm"
+                >
+                  {job.experienceLevel}
+                </Badge>
+              </div>
+            </CardContent>
+            <CardFooter className="flex flex-wrap justify-between gap-2">
+              <Button asChild className="w-full sm:w-auto">
+                <Link href={`/job/${job.postId}`}>
+                  View Details
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              {session?.user?.role &&
+              ["STUDENT", "ADMIN"].includes(session.user.role) ? (
+                <Link
+                  className={`${buttonVariants({ variant: "outline" })} w-full sm:w-auto`}
+                  href={`/apply/${job.postId}`}
+                >
+                  Apply
+                </Link>
               ) : null}
-            </div>
-            <div className="mt-4">
-              <Badge
-                variant="secondary"
-                className="pointer-events-none line-clamp-1 inline-block text-xs sm:text-sm"
-              >
-                {job.experienceLevel}
-              </Badge>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-wrap justify-between gap-2">
-            <Button asChild className="w-full sm:w-auto">
-              <Link href={`/job/${job.postId}`}>
-                View Details
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            {session?.user?.role &&
-            ["STUDENT", "ADMIN"].includes(session.user.role) ? (
-              <Link
-                className={`${buttonVariants({ variant: "outline" })} w-full sm:w-auto`}
-                href={`/apply/${job.postId}`}
-              >
-                Apply
-              </Link>
-            ) : null}
-          </CardFooter>
-        </Card>
-      ))}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
@@ -291,8 +295,6 @@ export default function JobListings({ session }: { session: Session | null }) {
             </div>
           </CardContent>
         </Card>
-
-        {/* Job Listings */}
         <QueryClientProvider client={queryClient}>
           <Listings
             search={search}

@@ -6,8 +6,13 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { applications, posts, users } from "@/server/db/schema";
 import { desc, eq, not, or } from "drizzle-orm";
-import { type z } from "zod";
+import { z } from "zod";
 import { sendNewApplicationEmail } from "./resend";
+// import { createOllama } from "ollama-ai-provider";
+// import { env } from "@/env";
+import { type JobPost } from "@/server/db/schema";
+import { generateObject } from "ai";
+import { groq } from "@ai-sdk/groq";
 
 export async function getNonAdminUsers() {
   const session = await auth();
@@ -369,4 +374,74 @@ export async function verifyFileAccess(
 
   // Default: deny access
   return false;
+}
+
+export async function getAIRecommendations(
+  interests: string,
+  jobPosts: JobPost[],
+) {
+  // const ollama = createOllama({
+  //   // optional settings, e.g.
+  //   baseURL: env.AI_URL,
+  // });
+  const session = await auth();
+
+  if (!session) {
+    return { error: "You need to be signed in to use AI features" };
+  }
+
+  if (session.user.role != "ADMIN") {
+    return { error: "Your account does not have AI capabilities yet" };
+  }
+
+  const prompt = `Note all of these available job posts:
+        ${jobPosts
+          ?.map(
+            (job) => `
+          ID: ${job.postId}
+          Title: ${job.title}
+          Company: ${job.company}
+          Location: ${job.location}
+          Employment type: ${job.employmentType}
+          Workplace type: ${job.workplaceType}
+          Experience level: ${job.experienceLevel}
+          Pay: ${job.pay}
+          Description: ${job.description}
+          Requirements: ${job.requirements}
+          `,
+          )
+          .join("\n")}
+
+        Your job is to choose three job posts that would fit the interests of a user. The interests are found below:
+        "${interests}"
+
+        Based on these interests, return a list of recommended posts (up to 3) following this schema:
+        z.object({
+          recommendations: z.array(z.object({
+            id: z.number(),
+            reasoning: z.string(),
+          }))
+        })
+        Match this schema exactly and do not respond with any text outside of this schema. For the id, just give the number and nothing else, do not include the "ID: " part of the prompt
+        For each recommendation, use second-person language like "Your interest in...
+        Do not make up facts about the user and do not hallucinate anything. If the user does not give enough infromation, choose jobs posts which seem interesting and give the reasoning as such".
+      `;
+
+  try {
+    const { object } = await generateObject({
+      model: groq("gemma2-9b-it"),
+      schema: z.object({
+        recommendations: z.array(
+          z.object({
+            id: z.number(),
+            reasoning: z.string(),
+          }),
+        ),
+      }),
+      prompt,
+    });
+    return object.recommendations;
+  } catch {
+    return { error: "Failed to get recommendations" };
+  }
 }
