@@ -394,7 +394,8 @@ export async function getAIRecommendations(
     return { error: "Your account does not have AI capabilities yet" };
   }
 
-  const prompt = `Note all of these available job posts:
+  const system = `Your job is to choose three job posts that would fit the interests of a user. You will be given the user's input on what they are interested in and are looking for in a future job.
+        You must choose from the available job posts listed below:
         ${jobPosts
           ?.map(
             (job) => `
@@ -412,17 +413,14 @@ export async function getAIRecommendations(
           )
           .join("\n")}
 
-        Your job is to choose three job posts that would fit the interests of a user. The interests are found below:
-        "${interests}"
-
-        Based on these interests, return a list of recommended posts (up to 3) following this schema:
+        To recap, based on the user's intersts, return a list of 3 recommended posts. You must respond following this schema:
         z.object({
           recommendations: z.array(z.object({
             id: z.number(),
             reasoning: z.string(),
           }))
         })
-        Match this schema exactly and do not respond with any text outside of this schema. For the id, just give the number and nothing else, do not include the "ID: " part of the prompt
+        You must match this schema exactly and do not respond with any text outside of this schema. For the id, just give the number and nothing else, do not include the "ID: " part of the prompt
         For each recommendation, use second-person language like "Your interest in...
         Do not make up facts about the user and do not hallucinate anything. If the user does not give enough infromation, choose jobs posts which seem interesting and give the reasoning as such".
       `;
@@ -438,7 +436,16 @@ export async function getAIRecommendations(
           }),
         ),
       }),
-      prompt,
+      messages: [
+        {
+          role: "system",
+          content: system,
+        },
+        {
+          role: "user",
+          content: interests,
+        },
+      ],
     });
     return object.recommendations;
   } catch {
