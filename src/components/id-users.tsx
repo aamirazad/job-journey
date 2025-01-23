@@ -17,5 +17,5 @@ export function PostHogId({ session }: { session: Session }) {
     }
   }
 
-  return "...";
+  return null;
 }

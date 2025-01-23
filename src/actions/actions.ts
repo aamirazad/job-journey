@@ -226,7 +226,17 @@ export async function getUnreviewedJobPosts() {
 
 export async function getMyJobPosts(userId: string) {
   const session = await auth();
-  if (session?.user.role !== "EMPLOYER") {
+  if (session?.user.role == "ADMIN") {
+    try {
+      const result = await db.query.posts.findMany({
+        orderBy: [desc(posts.dateCreated)],
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  } else if (session?.user.role != "EMPLOYER") {
     return null;
   }
 

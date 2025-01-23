@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Pencil,
   Search,
+  SlidersHorizontal,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -100,6 +101,7 @@ export default async function Header() {
     <header className="flex h-14 items-center justify-between px-4 lg:px-6">
       {/* Desktop */}
       <Link className="hidden items-center justify-center sm:flex" href="/">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo.svg"
           alt="Student Job Portal Logo"
@@ -128,7 +130,7 @@ export default async function Header() {
             Post a Job
           </Link>
         ) : null}
-        {session?.user.role === "EMPLOYER" || session?.user.role == "ADMIN" ? (
+        {session?.user.role === "EMPLOYER" ? (
           <Link
             className={buttonVariants({ variant: "link" })}
             href="/dashboard"
@@ -136,6 +138,24 @@ export default async function Header() {
             <LayoutDashboard />
             Dashboard
           </Link>
+        ) : null}
+        {session?.user.role == "ADMIN" ? (
+          <>
+            <Link
+              className={buttonVariants({ variant: "link" })}
+              href="/emp-dashboard"
+            >
+              <LayoutDashboard />
+              Employer Dashboard
+            </Link>
+            <Link
+              className={buttonVariants({ variant: "link" })}
+              href="/dashboard"
+            >
+              <SlidersHorizontal />
+              Admin Dashboard
+            </Link>
+          </>
         ) : null}
         {session ? (
           <UserDialog />

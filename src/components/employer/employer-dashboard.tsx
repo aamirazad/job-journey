@@ -66,6 +66,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { DashboardWrapper } from "../dashboard-wrapper";
 
 const queryClient = new QueryClient();
 
@@ -390,7 +391,7 @@ export default function EmployerDashboard({ session }: { session: Session }) {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Added more responsive padding and max-width */}
-      <div className="container mx-auto px-4 py-6 md:py-10">
+      <DashboardWrapper>
         {/* Responsive header layout */}
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <h1 className="text-2xl font-bold sm:text-3xl">Employer Dashboard</h1>
@@ -462,7 +463,7 @@ export default function EmployerDashboard({ session }: { session: Session }) {
           closeDialog={closeDialog}
           expandedApplication={expandedApplication}
         />
-      </div>
+      </DashboardWrapper>
     </QueryClientProvider>
   );
 }
