@@ -12,3 +12,29 @@ See our video presentation of this project at
 
 ![Job search](https://cloud-32tukvbvs-hack-club-bot.vercel.app/0image.png)
 All the job postings are demo/placeholder postings as this website is mainly a project to teach me how to build a website and not to be used.
+
+## Feature Walkthrough
+
+(To see most of these features in action, see the video above)
+
+- Home page (cited image)
+  - Fast image loading, low kbs for slow connections
+- About page
+- Sources page
+- Job search page
+  - AI job matcher
+  - Saves job search filters in address bar
+- Login functionality
+- Apply
+  - View uploaded file _keep tab open for later_
+- Employer dashboard
+  - High denisity, nice to look at ui
+  - Pop out job description
+  - Download, approve, reject job posting
+  - Edit
+- Admin dashboard
+  - Approve job postings
+  - Promot other users to admin
+  - Softlock prevention
+- Mobile support
+- Sources
