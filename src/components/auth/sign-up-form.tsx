@@ -139,7 +139,7 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <div className="flex flex-shrink items-center space-x-2">
+                    <div className="flex shrink items-center space-x-2">
                       <Input type={isHidden ? "text" : "password"} {...field} />
                       {isHidden ? (
                         <EyeIcon
@@ -165,7 +165,7 @@ export default function SignUpForm() {
                 <FormItem>
                   <FormLabel>Confirm password</FormLabel>
                   <FormControl>
-                    <div className="flex flex-shrink items-center space-x-2">
+                    <div className="flex shrink items-center space-x-2">
                       <Input type={isHidden ? "text" : "password"} {...field} />
                       {isHidden ? (
                         <EyeIcon

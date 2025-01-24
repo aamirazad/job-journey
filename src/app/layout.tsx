@@ -36,10 +36,10 @@ export default function RootLayout({
           <NextTopLoader color="#f97316" showSpinner={false} />
           <Header />
           <div className="absolute left-0 top-0 -z-10 flex h-full w-full flex-col">
-            <div className="w-full flex-1 bg-gradient-to-b from-[#FF499E]/10 to-[#D264B6]/10" />
-            <div className="w-full flex-1 bg-gradient-to-b from-[#D264B6]/10 to-[#A480CF]/10" />
-            <div className="w-full flex-1 bg-gradient-to-b from-[#A480CF]/10 to-[#779BE7]/30" />
-            <div className="w-full flex-1 bg-gradient-to-b from-[#779BE7]/30 to-[#49B6FF]/30" />
+            <div className="w-full flex-1 bg-linear-to-b from-[#FF499E]/10 to-[#D264B6]/10" />
+            <div className="w-full flex-1 bg-linear-to-b from-[#D264B6]/10 to-[#A480CF]/10" />
+            <div className="w-full flex-1 bg-linear-to-b from-[#A480CF]/10 to-[#779BE7]/30" />
+            <div className="w-full flex-1 bg-linear-to-b from-[#779BE7]/30 to-[#49B6FF]/30" />
           </div>
           <main className="mt-16 flex-1 md:mt-8">
             <NuqsAdapter>{children}</NuqsAdapter>

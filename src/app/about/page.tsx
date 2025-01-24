@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <div className="prose mx-auto w-full lg:prose-xl">
+    <div className="prose lg:prose-xl mx-auto w-full">
       <h1>About us</h1>
       <p>
         Welcome to JobJourney! This is a platform creted by high school students
@@ -25,8 +25,8 @@ export default function AboutPage() {
       </p>
       <Image
         src="https://utfs.io/f/54iPPKBOVfGCwUajN3FbZGLavBS0ATP9n5V1sR4Fky3pUfJx"
-        height={2464}
-        width={3280}
+        height={427}
+        width={568}
         alt="Selfie of Aamir and William"
         className="mx-auto h-[427] w-[568] rounded-xl"
         placeholder="blur"

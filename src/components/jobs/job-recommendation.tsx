@@ -38,7 +38,7 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
 
   return (
     <Card className="relative mx-auto w-full max-w-3xl overflow-hidden">
-      <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#1f9ed3] via-[#4174db] to-[#7c2be8] opacity-75"></div>
+      <div className="absolute inset-0 rounded-lg bg-linear-to-r from-[#1f9ed3] via-[#4174db] to-[#7c2be8] opacity-75"></div>
       <CardHeader className="relative z-20">
         <CardTitle className="flex items-center gap-2 text-2xl font-bold text-white">
           <Sparkles className="h-6 w-6" />
@@ -56,7 +56,7 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
             placeholder="Enter your interests and skills..."
             value={interests}
             onChange={(e) => setInterests(e.target.value)}
-            className="w-full border-white/10 bg-white/10 text-white ring-white placeholder:text-slate-200 focus-visible:outline-none focus-visible:ring-pink-300"
+            className="w-full border-white/10 bg-white/10 text-white ring-white placeholder:text-slate-200 focus-visible:outline-hidden focus-visible:ring-pink-300"
           />
           <Button
             type="submit"
@@ -75,11 +75,11 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
         </form>
       </CardContent>
       {recommendations === null ? null : "error" in recommendations ? (
-        <CardFooter className="relative z-20 bg-white/10 backdrop-blur-sm">
+        <CardFooter className="relative z-20 bg-white/10 backdrop-blur-xs">
           <FormError message={recommendations.error} />
         </CardFooter>
       ) : (
-        <CardFooter className="relative z-20 bg-white/10 backdrop-blur-sm">
+        <CardFooter className="relative z-20 bg-white/10 backdrop-blur-xs">
           <div className="w-full">
             <h3 className="mb-2 text-lg font-semibold text-white">
               Recommended Jobs:

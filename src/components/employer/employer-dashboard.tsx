@@ -178,7 +178,7 @@ function JobPosts({
                   <DropdownMenuItem asChild>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
+                        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
                           <Trash2 className="h-4 w-4 text-red-500" />
                           <span className="text-red-500">Delete Post</span>
                         </div>

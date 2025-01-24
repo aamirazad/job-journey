@@ -42,12 +42,12 @@ export default async function HomePage() {
           <PostHogId session={session} />
         </Suspense>
       ) : null}
-      <section className="relative overflow-hidden pb-12 pt-16 md:pt-24 lg:pt-32">
+      <section className="relative overflow-hidden pt-16 pb-12 md:pt-24 lg:pt-32">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid items-center gap-8 md:grid-cols-2">
             <div className="space-y-6 text-center md:text-left">
               <div className="space-y-4">
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl dark:text-white">
                   Kickstart Your Career Journey
                 </h1>
                 <p className="max-w-xl text-xl text-gray-600 dark:text-gray-300">
@@ -140,7 +140,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 py-16 text-white shadow-lg">
+      <section className="bg-linear-to-r from-orange-400 via-orange-500 to-orange-600 py-16 text-white shadow-lg">
         <div className="container mx-auto px-4 text-center md:px-6">
           <div className="mx-auto max-w-3xl space-y-6">
             <h2 className="text-4xl font-bold">Ready to Take the Next Step?</h2>
