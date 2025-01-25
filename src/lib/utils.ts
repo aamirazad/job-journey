@@ -8,3 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 export function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+
+export function truncateWithEllipsis(inputString: string, maxLength: number) {
+  return inputString.length > maxLength
+    ? inputString.substring(0, maxLength - 3) + "..."
+    : inputString;
+}

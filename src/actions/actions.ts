@@ -13,6 +13,7 @@ import { sendNewApplicationEmail } from "./resend";
 import { type JobPost } from "@/server/db/schema";
 import { generateObject } from "ai";
 import { groq } from "@ai-sdk/groq";
+import { truncateWithEllipsis } from "@/lib/utils";
 
 export async function getNonAdminUsers() {
   const session = await auth();
@@ -417,7 +418,7 @@ export async function getAIRecommendations(
           Workplace type: ${job.workplaceType}
           Experience level: ${job.experienceLevel}
           Pay: ${job.pay}
-          Description: ${job.description}
+          Description: ${truncateWithEllipsis(job.description, 200)}
           Requirements: ${job.requirements}
           `,
           )

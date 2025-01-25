@@ -45,10 +45,10 @@ function DetailedJobPost({ postId }: { postId: number }) {
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-auto">
-            <CardTitle className="break-words text-2xl font-bold">
+            <CardTitle className="text-2xl font-bold break-words">
               {post.title}
             </CardTitle>
-            <p className="mt-1 break-words text-muted-foreground">
+            <p className="text-muted-foreground mt-1 break-words">
               {post.company}
             </p>
           </div>
@@ -60,28 +60,28 @@ function DetailedJobPost({ postId }: { postId: number }) {
       <CardContent className="space-y-6">
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center break-words">
-            <MapPin className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+            <MapPin className="text-muted-foreground mr-2 h-4 w-4 flex-none" />
             <span className="break-all">{post.location}</span>
           </div>
           <div className="flex items-center break-words">
-            <Briefcase className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+            <Briefcase className="text-muted-foreground mr-2 h-4 w-4 flex-none" />
             <span className="break-all">{post.employmentType}</span>
           </div>
           {post.workplaceType && (
             <div className="flex items-center break-words">
-              <Building className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <Building className="text-muted-foreground mr-2 h-4 w-4 flex-none" />
               <span className="break-all">{post.workplaceType}</span>
             </div>
           )}
           {post.experienceLevel && (
             <div className="flex items-center break-words">
-              <Award className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <Award className="text-muted-foreground mr-2 h-4 w-4 flex-none" />
               <span className="break-all">{post.experienceLevel}</span>
             </div>
           )}
           {post.pay && (
             <div className="flex items-center break-words">
-              <DollarSign className="mr-2 h-4 w-4 flex-none text-muted-foreground" />
+              <DollarSign className="text-muted-foreground mr-2 h-4 w-4 flex-none" />
               <span className="break-all">{post.pay}</span>
             </div>
           )}
@@ -94,7 +94,7 @@ function DetailedJobPost({ postId }: { postId: number }) {
             <FileText className="mr-2 h-5 w-5" />
             Job Description
           </h3>
-          <p className="whitespace-pre-line break-words text-muted-foreground">
+          <p className="text-muted-foreground break-words whitespace-pre-line">
             {post.description}
           </p>
         </div>
@@ -105,7 +105,7 @@ function DetailedJobPost({ postId }: { postId: number }) {
               <CheckSquare className="mr-2 h-5 w-5" />
               Requirements
             </h3>
-            <p className="whitespace-pre-line text-muted-foreground">
+            <p className="text-muted-foreground whitespace-pre-line">
               {post.requirements}
             </p>
           </div>
@@ -117,7 +117,7 @@ function DetailedJobPost({ postId }: { postId: number }) {
               <List className="mr-2 h-5 w-5" />
               Responsibilities
             </h3>
-            <p className="whitespace-pre-line text-muted-foreground">
+            <p className="text-muted-foreground whitespace-pre-line">
               {post.responsibilities}
             </p>
           </div>
@@ -129,7 +129,7 @@ function DetailedJobPost({ postId }: { postId: number }) {
               <Gift className="mr-2 h-5 w-5" />
               Benefits
             </h3>
-            <p className="whitespace-pre-line text-muted-foreground">
+            <p className="text-muted-foreground whitespace-pre-line">
               {post.benefits}
             </p>
           </div>
@@ -137,7 +137,7 @@ function DetailedJobPost({ postId }: { postId: number }) {
 
         <Separator />
 
-        <div className="flex justify-between text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex justify-between text-sm">
           <div className="flex items-center">
             <CalendarDays className="mr-2 h-4 w-4" />
             Posted on {post.dateCreated.toLocaleDateString()}
