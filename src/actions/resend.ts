@@ -5,19 +5,29 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+interface ApplicationDetails {
+  employerEmail: string;
+  postTitle: string;
+  applicantFirstName: string;
+  applicantLastName: string;
+  applicantEmail: string;
+}
+
+interface ReviewedApplicationDetails {
+  postTitle: string;
+  applicantFirstName: string;
+  applicantLastName: string;
+  result: "APPLIED" | "REJECTED" | "ACCEPTED";
+  applicantEmail: string;
+}
+
 export async function sendNewApplicationEmail({
   employerEmail,
   postTitle,
   applicantFirstName,
   applicantLastName,
   applicantEmail,
-}: {
-  employerEmail: string;
-  postTitle: string;
-  applicantFirstName: string;
-  applicantLastName: string;
-  applicantEmail: string;
-}) {
+}: ApplicationDetails) {
   const session = await auth();
 
   if (!session?.user) {
@@ -41,6 +51,54 @@ export async function sendNewApplicationEmail({
         </ul>
 
         <p>Log in to your dashboard to review the full application.</p>
+
+        <p style="color: #666; font-size: 0.8em;">
+          This is an automated notification.
+        </p>
+      </div>
+      `,
+    });
+
+    if (error) {
+      console.error(error);
+      return { error: "Error sending email" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return {
+      error: error instanceof Error ? error.message : "Error sending email",
+    };
+  }
+}
+
+export async function sendReviewApplicationEmail({
+  postTitle,
+  applicantFirstName,
+  applicantLastName,
+  result,
+  applicantEmail,
+}: ReviewedApplicationDetails) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const { error } = await resend.emails.send({
+      from: "Job Application Notifications <notifications@mail.aamira.me>",
+      to: applicantEmail,
+      subject: `Application Review: ${postTitle}`,
+      html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1>Application Reviewed</h1>
+        <p>Dear ${applicantFirstName} ${applicantLastName},</p>
+        <p>We have reviewed your application for the position: <strong>${postTitle}</strong>.</p>
+        <p>Your application has been <strong>${result}</strong>.</p>
+
+        <p>Thank you for your interest. If you have any questions, feel free to reach out.</p>
 
         <p style="color: #666; font-size: 0.8em;">
           This is an automated notification.

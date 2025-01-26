@@ -7,7 +7,7 @@ import { db } from "@/server/db";
 import { applications, posts, users } from "@/server/db/schema";
 import { desc, eq, not, or } from "drizzle-orm";
 import { z } from "zod";
-import { sendNewApplicationEmail } from "./resend";
+import { sendNewApplicationEmail, sendReviewApplicationEmail } from "./resend";
 // import { createOllama } from "ollama-ai-provider";
 // import { env } from "@/env";
 import { generateObject } from "ai";
@@ -356,10 +356,39 @@ export async function reviewApplication(
     return { error: "Unauthorized" };
   }
   try {
-    await db
+    const application = await db
       .update(applications)
       .set({ status: status })
-      .where(eq(applications.id, id));
+      .where(eq(applications.id, id))
+      .returning({
+        firstName: applications.firstName,
+        lastName: applications.lastName,
+        postId: applications.postId,
+        email: applications.email,
+      });
+    const post = await db.query.posts.findFirst({
+      where: eq(posts.postId, application[0]!.postId),
+      columns: { title: true },
+    });
+
+    if (
+      post?.title &&
+      application[0]?.firstName &&
+      application[0]?.lastName &&
+      application[0]?.email
+    ) {
+      const res = await sendReviewApplicationEmail({
+        postTitle: post.title,
+        applicantFirstName: application[0].firstName,
+        applicantLastName: application[0].lastName,
+        applicantEmail: application[0].email,
+        result: status,
+      });
+      if (res.error) {
+        throw Error(res.error);
+      }
+    }
+
     return { success: true };
   } catch (error) {
     console.error(error);
