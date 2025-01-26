@@ -11,7 +11,7 @@ export function openPdf(id: string | null) {
         })
         .then((blob) => {
           const url = URL.createObjectURL(blob);
-          window.open(url, "_blank"); // Open the PDF in a new tab
+          window.open(url, "_blank");
         })
         .catch((error) => console.error(error));
     },

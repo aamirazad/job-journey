@@ -15,6 +15,10 @@ import { generateObject } from "ai";
 import { groq } from "@ai-sdk/groq";
 import { truncateWithEllipsis } from "@/lib/utils";
 
+/**
+ * Gets a list of users that are not admin
+ * Used for the list of users to promote
+ */
 export async function getNonAdminUsers() {
   const session = await auth();
 
@@ -33,6 +37,12 @@ export async function getNonAdminUsers() {
   }
 }
 
+/**
+ * Promotes a certain user to admin
+ * Only admins can call this function
+ * @param userId
+ * @returns
+ */
 export async function promoteUser(userId: string) {
   const session = await auth();
 
@@ -47,6 +57,12 @@ export async function promoteUser(userId: string) {
   }
 }
 
+/**
+ * Gets the email of the employer who posted a certain job post
+ * For use when sending notification email
+ * @param postId
+ * @returns
+ */
 export async function getEmployerEmailByPostId(postId: number) {
   const session = await auth();
 
@@ -63,10 +79,15 @@ export async function getEmployerEmailByPostId(postId: number) {
     .where(eq(posts.postId, postId))
     .execute();
 
-  // This will return an array, so we'll get the first result
   return result[0] ?? null;
 }
 
+/**
+ * Sends an email notification for a new application posted
+ * @param values
+ * @param postId
+ * @returns
+ */
 export async function handleSendingNotificationEmail(
   values: z.infer<typeof ApplicationFormSchema>,
   postId: number,
@@ -352,7 +373,6 @@ export async function verifyFileAccess(
   userId: string,
   userRole: string,
 ): Promise<boolean> {
-  // Get application info
   const application = await db.query.applications.findFirst({
     where: or(
       eq(applications.resumeId, fileId),
@@ -462,4 +482,38 @@ export async function getAIRecommendations(
   } catch {
     return { error: "Failed to get recommendations" };
   }
+}
+
+interface GeocodingResponse {
+  features: Array<{
+    center: [number, number];
+    place_name: string;
+  }>;
+}
+
+export async function geocodeLocation(
+  location: string,
+): Promise<[number, number] | { error: string }> {
+  const accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ?? "";
+
+  try {
+    const response = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${accessToken}`,
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch location data");
+    }
+
+    const data = (await response.json()) as GeocodingResponse;
+
+    if (data.features[0] && data.features.length > 0) {
+      const [longitude, latitude] = data.features[0].center;
+
+      return [longitude, latitude];
+    }
+  } catch {
+    return { error: "Failed to find job location" };
+  }
+  return { error: "Failed to find job location" };
 }

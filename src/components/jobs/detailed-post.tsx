@@ -25,6 +25,7 @@ import BodyMessage from "../body-message";
 import LoadingSpinner from "../loading-spinner";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
+import MapBoxLocation from "../map-box";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,8 @@ function DetailedJobPost({ postId }: { postId: number }) {
             </div>
           )}
         </div>
+
+        <MapBoxLocation location={post.location} />
 
         <Separator />
 
