@@ -10,7 +10,6 @@ import { z } from "zod";
 import { sendNewApplicationEmail } from "./resend";
 // import { createOllama } from "ollama-ai-provider";
 // import { env } from "@/env";
-import { type JobPost } from "@/server/db/schema";
 import { generateObject } from "ai";
 import { groq } from "@ai-sdk/groq";
 import { truncateWithEllipsis } from "@/lib/utils";
@@ -407,15 +406,18 @@ export async function verifyFileAccess(
   return false;
 }
 
-export async function getAIRecommendations(
-  interests: string,
-  jobPosts: JobPost[],
-) {
+export async function getAIRecommendations(interests: string) {
   // const ollama = createOllama({
   //   // optional settings, e.g.
   //   baseURL: env.AI_URL,
   // });
   const session = await auth();
+
+  const jobPosts = await getReviewedJobPosts();
+
+  if (jobPosts instanceof Error) {
+    return { error: "Failed to get job posts" };
+  }
 
   if (!session) {
     return { error: "You need to be signed in to use AI features" };

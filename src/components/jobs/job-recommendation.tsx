@@ -32,7 +32,7 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setRecommendations(await getAIRecommendations(interests, jobPosts));
+    setRecommendations(await getAIRecommendations(interests));
     setIsLoading(false);
   };
 
@@ -56,7 +56,7 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
             placeholder="Enter your interests and skills..."
             value={interests}
             onChange={(e) => setInterests(e.target.value)}
-            className="w-full border-white/10 bg-white/10 text-white ring-white placeholder:text-slate-200 focus-visible:outline-hidden focus-visible:ring-pink-300"
+            className="w-full border-white/10 bg-white/10 text-white ring-white placeholder:text-slate-200 focus-visible:ring-pink-300 focus-visible:outline-hidden"
           />
           <Button
             type="submit"
