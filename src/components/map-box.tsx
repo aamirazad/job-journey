@@ -60,7 +60,7 @@ function App({ location }: { location: string }) {
   }
 
   if (!data || "error" in data) {
-    return <FormError message="Form failed to load" />;
+    return <FormError message="Map failed to load" />;
   }
 
   return (
