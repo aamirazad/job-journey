@@ -119,3 +119,14 @@ export const ApplicationFormSchema = z.object({
     message: "Email is required",
   }),
 });
+
+export interface SearchFilters {
+  search: string;
+  employmentTypes: string[];
+  // Add more filter types as needed
+}
+
+export const initialSearchFilters: SearchFilters = {
+  search: "",
+  employmentTypes: [],
+};

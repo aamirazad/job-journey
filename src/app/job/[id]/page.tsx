@@ -1,4 +1,6 @@
-import DetailedJobPost from "@/components/jobs/detailed-post";
+import { getJobPost } from "@/actions/actions";
+import BodyMessage from "@/components/body-message";
+import { DetailedJobPost } from "@/components/jobs/detailed-post";
 
 export default async function ListingPage({
   params,
@@ -6,5 +8,9 @@ export default async function ListingPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <DetailedJobPost postId={Number(id)} />;
+  const JobPost = await getJobPost(Number(id));
+  if (!JobPost) {
+    return <BodyMessage>Post not found</BodyMessage>;
+  }
+  return <DetailedJobPost post={JobPost} />;
 }

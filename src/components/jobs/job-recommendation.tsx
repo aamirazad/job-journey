@@ -12,18 +12,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Loader2 } from "lucide-react";
-import { type JobPost } from "@/server/db/schema";
 import Link from "next/link";
-import { getAIRecommendations } from "@/actions/actions";
+import { getAIRecommendations, getReviewedJobPosts } from "@/actions/actions";
 import { FormError } from "../auth/form-error";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
-export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
+const queryClient = new QueryClient();
+
+function App() {
   const [interests, setInterests] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   interface SingleRecommendation {
     id: number;
     reasoning: string;
   }
+
+  const { data: jobPosts } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getReviewedJobPosts,
+  });
 
   const [recommendations, setRecommendations] = useState<
     SingleRecommendation[] | null | { error: string }
@@ -35,6 +46,25 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
     setRecommendations(await getAIRecommendations(interests));
     setIsLoading(false);
   };
+
+  if (!jobPosts || jobPosts instanceof Error) {
+    return (
+      <Card className="relative mx-auto w-full max-w-3xl overflow-hidden">
+        <div className="absolute inset-0 rounded-lg bg-linear-to-r from-[#1f9ed3] via-[#4174db] to-[#7c2be8] opacity-75"></div>
+        <CardHeader className="relative z-20">
+          <CardTitle className="flex items-center gap-2 text-2xl font-bold text-white">
+            <Sparkles className="h-6 w-6" />
+            AI Job Matcher
+          </CardTitle>
+          <CardDescription className="text-gray-100">
+            Describe what you are interested in and we will match the perfect
+            job for you. Powered by AI, may contain occasional errors
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="relative z-20"></CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="relative mx-auto w-full max-w-3xl overflow-hidden">
@@ -86,7 +116,7 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
             </h3>
             <ul className="list-inside list-disc space-y-1 text-white">
               {recommendations.map((rec, index) => {
-                const matchedJob = jobPosts?.find(
+                const matchedJob = jobPosts.find(
                   (job) => job.postId === rec.id,
                 );
                 return (
@@ -110,5 +140,13 @@ export function JobRecommendation({ jobPosts }: { jobPosts: JobPost[] }) {
         </CardFooter>
       )}{" "}
     </Card>
+  );
+}
+
+export function JobRecommendation() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   );
 }

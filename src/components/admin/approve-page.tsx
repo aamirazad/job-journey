@@ -87,14 +87,14 @@ function Block({
         <TableBody>
           {posts.map((job) => (
             <TableRow key={job.postId} className="text-sm sm:text-base">
-              <TableCell className="min-w-64 max-w-0">
+              <TableCell className="max-w-0 min-w-64">
                 <div className="truncate" title={job.title}>
                   {job.title}
                 </div>
               </TableCell>
               <TableCell className="max-w-[100px] sm:max-w-[150px]">
                 <div
-                  className="overflow-hidden truncate text-ellipsis"
+                  className="truncate overflow-hidden text-ellipsis"
                   title={job.company}
                 >
                   {job.company}
@@ -159,10 +159,12 @@ export function PendingJobPostingsBlock() {
           </CardContent>
         </Card>
       </QueryClientProvider>
-      <DetailedPostPopup
-        closeDialog={closeDialog}
-        expandedPost={expandedPost}
-      />
+      {expandedPost && (
+        <DetailedPostPopup
+          closeDialog={closeDialog}
+          expandedPost={expandedPost}
+        />
+      )}
     </>
   );
 }

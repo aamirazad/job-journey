@@ -127,7 +127,7 @@ function JobPosts({
             key={post.postId}
             className={selectedPost === post.postId ? "bg-gray-100" : ""}
           >
-            <TableCell className="min-w-64 max-w-0">
+            <TableCell className="max-w-0 min-w-64">
               <div className="truncate" title={post.title}>
                 {post.title}
               </div>
@@ -178,7 +178,7 @@ function JobPosts({
                   <DropdownMenuItem asChild>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <div className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
+                        <div className="focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0">
                           <Trash2 className="h-4 w-4 text-red-500" />
                           <span className="text-red-500">Delete Post</span>
                         </div>
@@ -390,15 +390,10 @@ export default function EmployerDashboard({ session }: { session: Session }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Added more responsive padding and max-width */}
       <DashboardWrapper>
-        {/* Responsive header layout */}
         <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <h1 className="text-2xl font-bold sm:text-3xl">Employer Dashboard</h1>
-          <Button
-            asChild
-            className="w-full sm:w-auto" // Full width on mobile, auto on larger screens
-          >
+          <Button asChild className="w-full sm:w-auto">
             <Link
               href="/post"
               className="flex items-center justify-center gap-2"
@@ -408,7 +403,6 @@ export default function EmployerDashboard({ session }: { session: Session }) {
           </Button>
         </div>
 
-        {/* Responsive grid with gap and padding */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <Card className="w-full">
             <CardHeader>
@@ -454,11 +448,12 @@ export default function EmployerDashboard({ session }: { session: Session }) {
           )}
         </div>
 
-        {/* Modals remain the same */}
-        <DetailedPostPopup
-          closeDialog={closeDialog}
-          expandedPost={expandedPost}
-        />
+        {expandedPost ? (
+          <DetailedPostPopup
+            closeDialog={closeDialog}
+            expandedPost={expandedPost}
+          />
+        ) : null}
         <DetailedApplicationPopup
           closeDialog={closeDialog}
           expandedApplication={expandedApplication}
