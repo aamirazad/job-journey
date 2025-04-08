@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { JobFilters } from "./job-filters";
 import { JobListings } from "./job-listings";
 import { type SearchFilters, initialSearchFilters } from "@/schemas";
+import { useSearchParams } from "next/navigation";
 
 export function JobSearch() {
   const [filters, setFilters] = useState<SearchFilters>(initialSearchFilters);
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
 
   const updateFilters = (updates: Partial<SearchFilters>) => {
     setFilters((prev) => ({ ...prev, ...updates }));
@@ -15,6 +18,14 @@ export function JobSearch() {
   const clearFilters = () => {
     setFilters(initialSearchFilters);
   };
+
+  useEffect(() => {
+    if (search) {
+      setFilters((prev) => ({ ...prev, search }));
+    } else {
+      setFilters(initialSearchFilters);
+    }
+  }, [search]);
 
   return (
     <div className="container mx-auto flex flex-col p-4">

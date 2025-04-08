@@ -36,7 +36,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="items-cener min-h-screen">
       {session ? (
         <Suspense>
           <PostHogId session={session} />
@@ -90,7 +90,7 @@ export default async function HomePage() {
                     href="https://unsplash.com/@campaign_creators?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:text-orange-600"
+                    className="underline hover:text-blue-600"
                   >
                     Campaign Creators
                   </a>{" "}
@@ -99,11 +99,11 @@ export default async function HomePage() {
                     href="https://unsplash.com/photos/man-standing-in-front-of-people-sitting-beside-table-with-laptop-computers-gMsnXqILjp4?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline hover:text-orange-600"
+                    className="underline hover:text-blue-600"
                   >
                     Unsplash
                   </a>
-                  <div className="pointer-events-none absolute inset-0 -m-12 rotate-12 rounded-full bg-orange-200 opacity-30"></div>
+                  <div className="pointer-events-none absolute inset-0 -m-12 rotate-12 rounded-full bg-blue-200 opacity-30"></div>
                 </div>
               </div>
             </div>
@@ -140,9 +140,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-linear-to-r from-orange-400 via-orange-500 to-orange-600 py-16 text-white shadow-lg">
-        <div className="container mx-auto px-4 text-center md:px-6">
-          <div className="mx-auto max-w-3xl space-y-6">
+      <section className="clipped mx-auto max-w-4xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 py-16 text-white shadow-lg">
+        <div className="px-4 text-center md:px-6">
+          <div className="mx-auto space-y-6">
             <h2 className="text-4xl font-bold">Ready to Take the Next Step?</h2>
             <p className="text-xl opacity-90">
               Create your profile, showcase your skills, and connect with top
@@ -152,7 +152,7 @@ export default async function HomePage() {
               <Button
                 variant="secondary"
                 size="lg"
-                className="bg-white text-orange-500 shadow-md hover:bg-gray-300"
+                className="bg-white text-blue-500 shadow-md hover:bg-gray-300"
                 asChild
               >
                 <Link href="/auth/signup">Create account</Link>
@@ -160,7 +160,7 @@ export default async function HomePage() {
               <Button
                 variant="secondary"
                 size="lg"
-                className="bg-white text-orange-500 shadow-md hover:bg-gray-300"
+                className="bg-white text-blue-500 shadow-md hover:bg-gray-300"
                 asChild
               >
                 <Link href="jobs">Browse Jobs</Link>

@@ -31,6 +31,21 @@ import { jobPostSchema } from "@/schemas";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+export type DefaultPostDetails = {
+  postId?: number;
+  title: string;
+  company: string;
+  location: string;
+  employmentType: string;
+  workplaceType: string | null;
+  experienceLevel: string | null;
+  pay: string | null;
+  description: string;
+  requirements: string | null;
+  responsibilities: string | null;
+  benefits: string | null;
+};
+
 function PostForm({
   session,
   refreshPage,
@@ -38,7 +53,7 @@ function PostForm({
 }: {
   session: Session;
   refreshPage: () => void;
-  defaultPostDetails?: JobPost;
+  defaultPostDetails?: DefaultPostDetails;
 }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof jobPostSchema>>({
@@ -295,7 +310,7 @@ export function PostJob({
   defaultPostDetails,
 }: {
   session: Session;
-  defaultPostDetails?: JobPost;
+  defaultPostDetails?: DefaultPostDetails;
 }) {
   const [key, setKey] = useState(0);
   const refreshPage = () => {

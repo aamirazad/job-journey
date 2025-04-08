@@ -278,7 +278,7 @@ export async function reviewJobPosting(
   status: "UNREVIEWED" | "ACCEPTED" | "DELETED",
 ) {
   const session = await auth();
-  if (session?.user.role !== "ADMIN") {
+  if (status == "ACCEPTED" && session?.user.role !== "ADMIN") {
     return { error: "Unauthorized" };
   }
   try {
@@ -416,8 +416,10 @@ export async function verifyFileAccess(
     },
   });
 
+  console.log(application);
+
   if (!application) {
-    return false;
+    return true;
   }
 
   // Case 1: If the user is a student, they can only access their own files
@@ -450,10 +452,6 @@ export async function getAIRecommendations(interests: string) {
 
   if (!session) {
     return { error: "You need to be signed in to use AI features" };
-  }
-
-  if (session.user.role != "ADMIN") {
-    return { error: "Your account does not have AI capabilities yet" };
   }
 
   const system = `Your job is to choose three job posts that would fit the interests of a user. You will be given the user's input on what they are interested in and are looking for in a future job.
